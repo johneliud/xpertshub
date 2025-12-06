@@ -5,9 +5,11 @@ from .models import User
 class CustomerRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+        'placeholder': 'Enter your password',
     }))
     password_confirmation = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+        'placeholder': 'Confirm your password',
     }))
 
     class Meta:
@@ -16,13 +18,16 @@ class CustomerRegistrationForm(forms.ModelForm):
         widgets = {
             'username': forms.TextInput(attrs={
                 'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Enter your username',
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Enter your email',
             }),
             'date_of_birth': forms.DateInput(attrs={
                 'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
                 'type': 'date',
+                'placeholder': 'Select your date of birth',
             }),
         }
 
@@ -39,9 +44,11 @@ class CustomerRegistrationForm(forms.ModelForm):
 class CompanyRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+        'placeholder': 'Enter your password',
     }))
     password_confirmation = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+        'placeholder': 'Confirm your password',
     }))
 
     class Meta:
@@ -50,9 +57,11 @@ class CompanyRegistrationForm(forms.ModelForm):
         widgets = {
             'username': forms.TextInput(attrs={
                 'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Enter your company username',
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Enter your company email',
             }),
             'field_of_work': forms.Select(attrs={
                 'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
@@ -73,7 +82,9 @@ class LoginForm(AuthenticationForm):
     username = forms.EmailField(widget=forms.TextInput(attrs={
         'autofocus': True,
         'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+        'placeholder': 'Enter your email',
     }))
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+        'placeholder': 'Enter your password',
     }))
