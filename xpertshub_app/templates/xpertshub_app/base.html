@@ -5,16 +5,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!--<link rel="stylesheet" href="{% static 'css/styles.css' %}" />-->
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    {% load tailwind_tags %} {% tailwind_css %}
 
     <title>XpertsHub</title>
-    {% load tailwind_tags %} {% tailwind_css %}
   </head>
   <body class="bg-gray-100 w-full">
     <header class="w-full">
       <nav
-        class="bg-white shadow-md flex items-center justify-between p-4 md:p-6"
+        class="w-full bg-white shadow-md flex items-center justify-between p-4 md:p-6"
       >
         <div>
           <a class="text-2xl font-bold text-gray-800" href="{% url 'home' %}"
