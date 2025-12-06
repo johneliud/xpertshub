@@ -1,0 +1,19 @@
+name: PR Description Template
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  template-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR description
+        run: |
+          body="${{ github.event.pull_request.body }}"
+          if [[ "$body" == *"## Description"* ]]; then
+            echo "PR template used"
+          else
+            echo "Please use the PR template"
+            exit 1
+          fi
