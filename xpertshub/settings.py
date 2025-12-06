@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'xpertshub_app'
 ]
 
+AUTH_USER_MODEL = 'users.User'
+
 TAILWIND_APP_NAME = 'theme'
 
 MIDDLEWARE = [
