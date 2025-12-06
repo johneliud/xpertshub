@@ -1,75 +1,95 @@
 {% extends "xpertshub_app/base.html" %} {% block content %}
-<div class="max-w-md mx-auto mt-10">
-  <div class="bg-white p-8 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold text-center mb-6">
-      Create a Customer Account
-    </h2>
-    <form method="post">
-      {% csrf_token %}
+<div class="min-h-screen flex items-center justify-center">
+  <div class="max-w-md w-full">
+    <div class="bg-white p-8 rounded-lg shadow-md">
+      <h2 class="text-2xl font-bold text-center mb-6">
+        Create a Customer Account
+      </h2>
+      <form method="post">
+        {% csrf_token %}
 
-      <div class="mb-4">
-        <label
-          for="id_username"
-          class="block text-gray-700 text-sm font-bold mb-2"
-          >Username</label
+        <div class="mb-4">
+          <label
+            for="id_username"
+            class="block text-gray-700 text-sm font-bold mb-2"
+            >Username</label
+          >
+          {{ form.username }}
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="id_email"
+            class="block text-gray-700 text-sm font-bold mb-2"
+            >Email</label
+          >
+          {{ form.email }}
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="id_date_of_birth"
+            class="block text-gray-700 text-sm font-bold mb-2"
+            >Date of Birth</label
+          >
+          {{ form.date_of_birth }}
+        </div>
+
+        <div class="mb-4 relative">
+          <label
+            for="id_password"
+            class="block text-gray-700 text-sm font-bold mb-2"
+            >Password</label
+          >
+
+          {{ form.password }}
+
+          <button
+            type="button"
+            class="toggle-password absolute inset-y-0 right-0 px-3 flex items-center text-sm text-gray-600"
+          >
+            Show
+          </button>
+        </div>
+
+        <div class="mb-6 relative">
+          <label
+            for="id_password_confirmation"
+            class="block text-gray-700 text-sm font-bold mb-2"
+            >Confirm Password</label
+          >
+
+          {{ form.password_confirmation }}
+
+          <button
+            type="button"
+            class="toggle-password absolute inset-y-0 right-0 px-3 flex items-center text-sm text-gray-600"
+          >
+            Show
+          </button>
+        </div>
+
+        {% if form.errors %}
+        <div
+          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+          role="alert"
         >
-        {{ form.username }}
-      </div>
+          {% for field, error_list in form.errors.items %} {% for error in error_list %}
+          <p>{{ error }}</p>
+          {% endfor %} {% endfor %}
+        </div>
+        {% endif %}
 
-      <div class="mb-4">
-        <label for="id_email" class="block text-gray-700 text-sm font-bold mb-2"
-          >Email</label
-        >
-        {{ form.email }}
-      </div>
-
-      <div class="mb-4">
-        <label
-          for="id_date_of_birth"
-          class="block text-gray-700 text-sm font-bold mb-2"
-          >Date of Birth</label
-        >
-        {{ form.date_of_birth }}
-      </div>
-
-      <div class="mb-4">
-        <label
-          for="id_password"
-          class="block text-gray-700 text-sm font-bold mb-2"
-          >Password</label
-        >
-        {{ form.password }}
-      </div>
-
-      <div class="mb-6">
-        <label
-          for="id_password_confirmation"
-          class="block text-gray-700 text-sm font-bold mb-2"
-          >Confirm Password</label
-        >
-        {{ form.password_confirmation }}
-      </div>
-
-      {% if form.errors %}
-      <div
-        class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-        role="alert"
-      >
-        {% for field, error_list in form.errors.items %} {% for error in error_list %}
-        <p>{{ error }}</p>
-        {% endfor %} {% endfor %}
-      </div>
-      {% endif %}
-
-      <div class="flex items-center justify-between">
-        <button
-          type="submit"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Register
-        </button>
-      </div>
-    </form>
+        <div class="flex items-center justify-between">
+          <button
+            type="submit"
+            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Register
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}
