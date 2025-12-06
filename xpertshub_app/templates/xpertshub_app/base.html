@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+{% load static %}
+	
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+    <title>XpertsHub</title>
+    {% load tailwind_tags %}
+    {% tailwind_css %}
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto">
+        {% block content %}
+        <h1 class="text-3xl font-bold underline">XpertsHub</h1>
+        {% endblock %}
+    </div>
+</body>
+</html>
