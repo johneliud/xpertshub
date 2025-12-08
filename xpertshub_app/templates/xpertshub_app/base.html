@@ -5,56 +5,211 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <link href='https://cdn.boxicons.com/3.0.6/fonts/basic/boxicons.min.css' rel='stylesheet'>
-    <!--<link rel="stylesheet" href="{% static 'css/styles.css' %}" />-->
+
+    <link
+      href="https://cdn.boxicons.com/3.0.6/fonts/basic/boxicons.min.css"
+      rel="stylesheet"
+    />
 
     {% load tailwind_tags %} {% tailwind_css %}
 
-    <title>XpertsHub</title>
+    <title>
+      {% block title %}XpertsHub - Connect with Expert Service Providers{% endblock %}
+    </title>
   </head>
-  <body class="bg-gray-100 w-full">
-    <header class="w-full">
-      <nav
-        class="w-full bg-white shadow-md flex items-center justify-between p-4 md:p-6"
-      >
-        <div>
-          <a class="text-2xl font-bold text-gray-800" href="{% url 'home' %}"
-            >XpertsHub</a
-          >
-        </div>
-        <div>
-          {% if user.is_authenticated %}
-          <a
-            href="{% url 'logout' %}"
-            class="text-gray-800 hover:text-blue-500 mx-3"
-            >Logout</a
-          >
-          {% else %}
-          <a
-            href="{% url 'login' %}"
-            class="text-gray-800 hover:text-blue-500 mx-3"
-            >Login</a
-          >
-          <a
-            href="{% url 'customer_register' %}"
-            class="text-gray-800 hover:text-blue-500 mx-3"
-            >Register as Customer</a
-          >
-          <a
-            href="{% url 'company_register' %}"
-            class="text-gray-800 hover:text-blue-500 mx-3"
-            >Register as Company</a
-          >
-          {% endif %}
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+      <nav class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <i class="bx bx-wrench text-3xl text-blue-600"></i>
+            <a
+              class="font-mono text-4xl font-bold text-gray-800"
+              href="{% url 'home' %}"
+            >
+              XpertsHub
+            </a>
+          </div>
+
+          <div class="hidden md:flex items-center space-x-6">
+            <a
+              href="{% url 'home' %}"
+              class="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+            >
+              Home
+            </a>
+            <a
+              href="#"
+              class="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+            >
+              Services
+            </a>
+            <a
+              href="#"
+              class="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+            >
+              About
+            </a>
+          </div>
+
+          <div class="flex items-center space-x-3">
+            {% if user.is_authenticated %}
+            <span class="text-gray-600">Welcome, {{ user.username }}</span>
+            <a
+              href="{% url 'logout' %}"
+              class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+            >
+              <i class="bx bx-log-out mr-1"></i>Logout
+            </a>
+            {% else %}
+            <a
+              href="{% url 'login' %}"
+              class="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+            >
+              <i class="bx bx-log-in mr-1"></i>Login
+            </a>
+            <div class="hidden sm:flex space-x-2">
+              <a
+                href="{% url 'customer_register' %}"
+                class="bg-yellow-400 text-white px-4 py-2 rounded-lg hover:bg-yellow-300 transition-colors text-sm"
+              >
+                Register as Customer
+              </a>
+              <a
+                href="{% url 'company_register' %}"
+                class="bg-blue-600 text-gray-900 px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+              >
+                Register as Provider
+              </a>
+            </div>
+            {% endif %}
+          </div>
         </div>
       </nav>
     </header>
-    <div class="container mx-auto">
+
+    <!-- Main Content -->
+    <main class="flex-grow">
       {% block content %}
-      <h1 class="text-3xl font-bold text-center">Welcome to XpertsHub</h1>
+      <div class="container mx-auto px-6 py-12 text-center">
+        <h1 class="font-mono text-4xl font-bold text-gray-800 mb-4">
+          Welcome to XpertsHub
+        </h1>
+        <p class="text-gray-600 text-lg">
+          Your trusted marketplace for professional services
+        </p>
+      </div>
       {% endblock %}
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <div class="flex items-center space-x-2 mb-4">
+              <i class="bx bx-wrench text-2xl text-blue-400"></i>
+              <span class="font-mono text-xl font-bold">XpertsHub</span>
+            </div>
+            <p class="text-gray-400 mb-4">
+              Connecting customers with trusted service providers across various categories.
+            </p>
+            <div class="flex space-x-4">
+              <i
+                class="bx bxl-facebook text-2xl text-gray-400 hover:text-blue-400 cursor-pointer"
+              ></i>
+              <i
+                class="bx bxl-twitter text-2xl text-gray-400 hover:text-blue-400 cursor-pointer"
+              ></i>
+              <i
+                class="bx bxl-instagram text-2xl text-gray-400 hover:text-blue-400 cursor-pointer"
+              ></i>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-semibold text-lg mb-4">Services</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Plumbing</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Electrical</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Painting</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Housekeeping</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="font-semibold text-lg mb-4">Company</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Contact</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors">Blog</a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="font-semibold text-lg mb-4">Support</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Help Center</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Privacy Policy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Terms of Service</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Contact Support</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400"
+        >
+          <p>
+            &copy; 2024 XpertsHub. All rights reserved. Built by <a href="https://github.com/johneliud" target="_blank">John</a>.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="{% static 'js/password_toggle.js' %}"></script>
   </body>
-  <script src="{% static 'js/password_toggle.js' %}"></script>
 </html>
