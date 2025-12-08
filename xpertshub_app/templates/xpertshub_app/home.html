@@ -1,29 +1,22 @@
-{% extends "xpertshub_app/base.html" %} {% block content %}
+{% extends "xpertshub_app/base.html" %}
+
+{% block content %}
 <!-- Hero Section -->
-<section
-  class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-20"
->
+<section class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-20">
   <div class="container mx-auto px-6 text-center">
     <h1 class="font-mono text-5xl md:text-6xl font-bold mb-6 leading-tight">
       Find Expert Services
       <span class="text-yellow-300">Near You</span>
     </h1>
     <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
-      Connect with trusted professionals for all your home and business needs.
-      From plumbing to painting, we've got you covered.
+      Connect with trusted professionals for all your home and business needs. From plumbing to painting, we've got you covered.
     </p>
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a
-        href="{% url 'customer_register' %}"
-        class="bg-yellow-400 text-blue-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-colors"
-      >
-        Find Services
+      <a href="{% url 'customer_register' %}" class="bg-yellow-400 text-blue-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-colors">
+        <i class='bx bx-user-plus mr-2'></i>Find Services
       </a>
-      <a
-        href="{% url 'company_register' %}"
-        class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-900 transition-colors"
-      >
-        Offer Services
+      <a href="{% url 'company_register' %}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-900 transition-colors">
+        <i class='bx bx-briefcase mr-2'></i>Offer Services
       </a>
     </div>
   </div>
@@ -33,32 +26,19 @@
 <section class="py-16 bg-gray-50">
   <div class="container mx-auto px-6">
     <div class="text-center mb-12">
-      <h2 class="font-mono text-4xl font-bold text-gray-800 mb-4">
-        Popular Services
-      </h2>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto">
-        Browse our most requested professional services
-      </p>
+      <h2 class="font-mono text-4xl font-bold text-gray-800 mb-4">Popular Services</h2>
+      <p class="text-gray-600 text-lg max-w-2xl mx-auto">Browse our most requested professional services</p>
     </div>
-
+    
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {% include 'xpertshub_app/components/service_card.html' with
-      icon='bx-wrench' title='Plumbing' description='Pipes, leaks,
-      installations' %} {% include 'xpertshub_app/components/service_card.html'
-      with icon='bx-paint-roll' title='Painting' description='Interior &
-      exterior painting' %} {% include
-      'xpertshub_app/components/service_card.html' with icon='bx-home-heart'
-      title='Housekeeping' description='Cleaning & maintenance' %} {% include
-      'xpertshub_app/components/service_card.html' with icon='bx-bolt'
-      title='Electrical' description='Wiring & installations' %} {% include
-      'xpertshub_app/components/service_card.html' with icon='bx-wind'
-      title='Air Conditioning' description='AC repair & maintenance' %} {%
-      include 'xpertshub_app/components/service_card.html' with icon='bx-hammer'
-      title='Carpentry' description='Custom woodwork' %} {% include
-      'xpertshub_app/components/service_card.html' with icon='bx-leaf'
-      title='Gardening' description='Landscaping & care' %} {% include
-      'xpertshub_app/components/service_card.html' with icon='bx-cog' title='All
-      Services' description='Complete solutions' %}
+      {% include 'xpertshub_app/components/service_card.html' with icon='bx-wrench' title='Plumbing' description='Pipes, leaks, installations' %}
+      {% include 'xpertshub_app/components/service_card.html' with icon='bx-paint-roll' title='Painting' description='Interior & exterior painting' %}
+      {% include 'xpertshub_app/components/service_card.html' with icon='bx-home-heart' title='Housekeeping' description='Cleaning & maintenance' %}
+      {% include 'xpertshub_app/components/service_card.html' with icon='bx-bolt' title='Electrical' description='Wiring & installations' %}
+      {% include 'xpertshub_app/components/service_card.html' with icon='bx-wind' title='Air Conditioning' description='AC repair & maintenance' %}
+      {% include 'xpertshub_app/components/service_card.html' with icon='bx-hammer' title='Carpentry' description='Custom woodwork' %}
+      {% include 'xpertshub_app/components/service_card.html' with icon='bx-leaf' title='Gardening' description='Landscaping & care' %}
+      {% include 'xpertshub_app/components/service_card.html' with icon='bx-cog' title='All Services' description='Complete solutions' %}
     </div>
   </div>
 </section>
@@ -67,22 +47,14 @@
 <section class="py-16 bg-white">
   <div class="container mx-auto px-6">
     <div class="text-center mb-12">
-      <h2 class="font-mono text-4xl font-bold text-gray-800 mb-4">
-        How XpertsHub Works
-      </h2>
+      <h2 class="font-mono text-4xl font-bold text-gray-800 mb-4">How XpertsHub Works</h2>
       <p class="text-gray-600 text-lg">Simple steps to get the help you need</p>
     </div>
-
+    
     <div class="grid md:grid-cols-3 gap-8">
-      {% include 'xpertshub_app/components/step_card.html' with step='1'
-      icon='bx-search' title='Browse Services' description='Find the perfect
-      service provider for your needs' %} {% include
-      'xpertshub_app/components/step_card.html' with step='2'
-      icon='bx-message-dots' title='Request Service' description='Contact
-      professionals and get quotes' %} {% include
-      'xpertshub_app/components/step_card.html' with step='3'
-      icon='bx-check-circle' title='Get It Done' description='Enjoy professional
-      service at your doorstep' %}
+      {% include 'xpertshub_app/components/step_card.html' with step='1' icon='bx-search' title='Browse Services' description='Find the perfect service provider for your needs' %}
+      {% include 'xpertshub_app/components/step_card.html' with step='2' icon='bx-message-dots' title='Request Service' description='Contact professionals and get quotes' %}
+      {% include 'xpertshub_app/components/step_card.html' with step='3' icon='bx-check-circle' title='Get It Done' description='Enjoy professional service at your doorstep' %}
     </div>
   </div>
 </section>
@@ -91,13 +63,10 @@
 <section class="py-16 bg-blue-600 text-white">
   <div class="container mx-auto px-6">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-      {% include 'xpertshub_app/components/stat_card.html' with number='500+'
-      label='Service Providers' %} {% include
-      'xpertshub_app/components/stat_card.html' with number='1000+' label='Happy
-      Customers' %} {% include 'xpertshub_app/components/stat_card.html' with
-      number='12' label='Service Categories' %} {% include
-      'xpertshub_app/components/stat_card.html' with number='24/7'
-      label='Support Available' %}
+      {% include 'xpertshub_app/components/stat_card.html' with number='500+' label='Service Providers' %}
+      {% include 'xpertshub_app/components/stat_card.html' with number='1000+' label='Happy Customers' %}
+      {% include 'xpertshub_app/components/stat_card.html' with number='12' label='Service Categories' %}
+      {% include 'xpertshub_app/components/stat_card.html' with number='24/7' label='Support Available' %}
     </div>
   </div>
 </section>
@@ -106,21 +75,13 @@
 <section class="py-16 bg-gray-900 text-white">
   <div class="container mx-auto px-6 text-center">
     <h2 class="font-mono text-4xl font-bold mb-4">Ready to Get Started?</h2>
-    <p class="text-xl mb-8 opacity-90">
-      Join thousands of satisfied customers and service providers
-    </p>
+    <p class="text-xl mb-8 opacity-90">Join thousands of satisfied customers and service providers</p>
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a
-        href="{% url 'customer_register' %}"
-        class="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors"
-      >
-        Sign Up as Customer
+      <a href="{% url 'customer_register' %}" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors">
+        <i class='bx bx-user-plus mr-2'></i>Sign Up as Customer
       </a>
-      <a
-        href="{% url 'company_register' %}"
-        class="bg-yellow-400 text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-colors"
-      >
-        Join as Provider
+      <a href="{% url 'company_register' %}" class="bg-yellow-400 text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-colors">
+        <i class='bx bx-briefcase mr-2'></i>Join as Provider
       </a>
     </div>
   </div>
