@@ -1,0 +1,61 @@
+{% extends "xpertshub_app/base.html" %}
+
+{% block title %}{{ profile_user.username }} - Customer Profile{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+  {% include 'users/components/profile_header.html' with icon='bx-user' user_type='customer' %}
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Personal Information -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="font-semibold text-lg text-gray-800 mb-4 flex items-center">
+        <i class='bx bx-info-circle text-xl text-blue-600 mr-2'></i>
+        Personal Information
+      </h3>
+      <div class="space-y-3">
+        <div class="flex justify-between">
+          <span class="text-gray-600">Username:</span>
+          <span class="font-medium">{{ profile_user.username }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Email:</span>
+          <span class="font-medium">{{ profile_user.email }}</span>
+        </div>
+        {% if profile_user.date_of_birth %}
+        <div class="flex justify-between">
+          <span class="text-gray-600">Date of Birth:</span>
+          <span class="font-medium">{{ profile_user.date_of_birth|date:"F d, Y" }}</span>
+        </div>
+        {% endif %}
+        <div class="flex justify-between">
+          <span class="text-gray-600">Member Since:</span>
+          <span class="font-medium">{{ profile_user.date_joined|date:"F Y" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service Requests -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="font-semibold text-lg text-gray-800 mb-4 flex items-center">
+        <i class='bx bx-list-ul text-xl text-blue-600 mr-2'></i>
+        Service Requests
+      </h3>
+      {% if profile_user.service_requests.all %}
+        <div class="space-y-3">
+          {% for request in profile_user.service_requests.all %}
+          <div class="border-l-4 border-blue-500 pl-4 py-2">
+            <h4 class="font-medium text-gray-800">{{ request.service.name }}</h4>
+            <p class="text-sm text-gray-600">{{ request.service.field }}</p>
+            <p class="text-sm text-gray-500">Cost: ${{ request.calculated_cost }}</p>
+            <p class="text-xs text-gray-400">{{ request.date_requested|date:"M d, Y" }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-gray-500 text-center py-4">No service requests yet</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
