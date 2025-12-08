@@ -1,0 +1,14 @@
+<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+  <div class="flex items-center space-x-4">
+    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+      <i class='bx {{ icon }} text-3xl text-blue-600'></i>
+    </div>
+    <div>
+      <h1 class="font-mono text-2xl font-bold text-gray-800">{{ profile_user.username }}</h1>
+      <p class="text-gray-600">{{ profile_user.email }}</p>
+      <span class="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full mt-2">
+        {{ user_type|title }}
+      </span>
+    </div>
+  </div>
+</div>

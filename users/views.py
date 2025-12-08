@@ -1,8 +1,8 @@
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from .forms import CustomerRegistrationForm, CompanyRegistrationForm, LoginForm
 from .models import User
 
@@ -35,3 +35,15 @@ class CompanyRegisterView(CreateView):
 class UserLoginView(LoginView):
     form_class = LoginForm
     template_name = 'users/login.html'
+
+class ProfileView(DetailView):
+    model = User
+    context_object_name = 'profile_user'
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+
+    def get_template_names(self):
+        if self.object.user_type == 'customer':
+            return ['users/customer_profile.html']
+        else:
+            return ['users/company_profile.html']
