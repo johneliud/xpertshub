@@ -110,6 +110,25 @@ class RequestServiceView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'username': self.request.user.username})
 
+class ServiceRequestsView(LoginRequiredMixin, ListView):
+    model = ServiceRequest
+    template_name = 'services/service_requests.html'
+    context_object_name = 'service_requests'
+    paginate_by = 10
+
+    def dispatch(self, request, *args, **kwargs):
+        # Only allow company users to view service requests
+        if not request.user.is_authenticated or request.user.user_type != 'company':
+            messages.error(request, 'Only companies can view service requests.')
+            return redirect('home')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return ServiceRequest.objects.filter(
+            service__company=self.request.user,
+            service__status='approved'
+        ).order_by('-date_requested')
+
 def get_most_requested_services():
     """Helper function to get most requested services for home page"""
     return Service.objects.filter(status='approved').annotate(
