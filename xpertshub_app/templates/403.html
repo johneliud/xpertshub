@@ -1,0 +1,25 @@
+{% extends "xpertshub_app/base.html" %}
+
+{% block title %}Access Denied - XpertsHub{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-20 text-center">
+  <div class="max-w-2xl mx-auto bounce-in">
+    <div class="mb-8">
+      <i class="bx bx-lock-alt text-8xl text-red-500 mb-4"></i>
+      <h1 class="font-mono text-6xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent mb-4">403</h1>
+      <h2 class="text-3xl font-bold text-gray-800 mb-4">Access Denied</h2>
+      <p class="text-xl text-gray-600 mb-8">You don't have permission to access this resource.</p>
+    </div>
+    
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="{% url 'home' %}" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 hover:scale-105 shadow-lg">
+        <i class="bx bx-home mr-2"></i>Go Home
+      </a>
+      <a href="{% url 'login' %}" class="bg-gradient-to-r from-green-500 to-teal-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-teal-600 transition-all duration-300 hover:scale-105 shadow-lg">
+        <i class="bx bx-log-in mr-2"></i>Login
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
