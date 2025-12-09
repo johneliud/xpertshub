@@ -6,8 +6,8 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
 from django.db.models import Count
-from .forms import ServiceCreationForm
-from .models import Service
+from .forms import ServiceCreationForm, ServiceRequestForm
+from .models import Service, ServiceRequest
 
 class CreateServiceView(LoginRequiredMixin, CreateView):
     model = Service
@@ -75,6 +75,40 @@ class ServiceDetailView(DetailView):
             field=self.object.field
         ).exclude(id=self.object.id).order_by('-date_created')[:3]
         return context
+
+class RequestServiceView(LoginRequiredMixin, CreateView):
+    model = ServiceRequest
+    form_class = ServiceRequestForm
+    template_name = 'services/request_service.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Only allow customer users to request services
+        if not request.user.is_authenticated or request.user.user_type != 'customer':
+            messages.error(request, 'Only customers can request services.')
+            return redirect('home')
+        
+        # Get the service being requested
+        self.service = get_object_or_404(Service, pk=self.kwargs['service_id'], status='approved')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['service'] = self.service
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['service'] = self.service
+        return context
+
+    def form_valid(self, form):
+        form.instance.service = self.service
+        form.instance.customer = self.request.user
+        messages.success(self.request, f'Service request for "{self.service.name}" submitted successfully!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('profile', kwargs={'username': self.request.user.username})
 
 def get_most_requested_services():
     """Helper function to get most requested services for home page"""
