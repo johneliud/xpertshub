@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   {% load static %}
+  {% load service_tags %}
 
   <head>
     <meta charset="UTF-8" />
@@ -63,6 +64,20 @@
 
           <div class="flex items-center space-x-3">
             {% if user.is_authenticated %}
+            {% if user.user_type == 'company' %}
+            <a
+              href="{% url 'service_requests' %}"
+              class="relative text-gray-700 hover:text-blue-600 font-medium transition-colors"
+            >
+              <i class="bx bx-bell text-xl"></i>
+              {% get_pending_requests_count user as request_count %}
+              {% if request_count > 0 %}
+              <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {{ request_count }}
+              </span>
+              {% endif %}
+            </a>
+            {% endif %}
             <a
               href="{% url 'profile' user.username %}"
               class="text-gray-700 hover:text-blue-600 font-medium transition-colors"
