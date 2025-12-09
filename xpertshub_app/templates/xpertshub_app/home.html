@@ -2,119 +2,235 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-20">
-  <div class="container mx-auto px-6 text-center">
-    <h1 class="font-mono text-5xl md:text-6xl font-bold mb-6 leading-tight">
-      Find Expert Services
-      <span class="text-yellow-300">Near You</span>
-    </h1>
-    <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
-      Connect with trusted professionals for all your home and business needs. From plumbing to painting, we've got you covered.
-    </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a href="{% url 'customer_register' %}" class="bg-yellow-400 text-blue-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-colors">
-        Find Services
-      </a>
-      <a href="{% url 'company_register' %}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-900 transition-colors">
-        Offer Services
-      </a>
+<section class="relative bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-800 text-white py-24 overflow-hidden">
+  <div class="absolute inset-0 bg-black/20"></div>
+  <div class="container mx-auto px-6 text-center relative z-10">
+    <div class="bounce-in">
+      <h1 class="font-mono text-6xl md:text-7xl font-bold mb-6 leading-tight">
+        Conveniently Find 
+        <span class="text-yellow-300 animate-pulse">Expert Services</span>
+      </h1>
+      <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90 slide-in">
+        Connect with trusted professionals for all your home and business needs. From plumbing to painting, we've got you covered.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in">
+        <a href="{% url 'customer_register' %}" class="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:from-yellow-300 hover:to-orange-300 transition-all duration-300 hover:scale-105 shadow-2xl">
+          <i class='bx bx-user-plus mr-2'></i>Find Services
+        </a>
+        <a href="{% url 'company_register' %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-purple-900 transition-all duration-300 hover:scale-105 shadow-2xl">
+          <i class='bx bx-briefcase mr-2'></i>Offer Services
+        </a>
+      </div>
     </div>
   </div>
+  
+  <!-- Floating Elements -->
+  <div class="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full animate-bounce"></div>
+  <div class="absolute bottom-20 right-10 w-16 h-16 bg-yellow-300/20 rounded-full animate-pulse"></div>
+  <div class="absolute top-1/2 right-20 w-12 h-12 bg-blue-300/20 rounded-full animate-ping"></div>
 </section>
 
 <!-- Services Categories -->
-<section class="py-16 bg-gray-50">
+<section class="py-20 bg-gradient-to-br from-gray-50 to-purple-50">
   <div class="container mx-auto px-6">
-    <div class="text-center mb-12">
-      <h2 class="font-mono text-4xl font-bold text-gray-800 mb-4">Popular Services</h2>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto">Browse our most requested professional services</p>
+    <div class="text-center mb-16 fade-in">
+      <h2 class="font-mono text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-6">Popular Services</h2>
+      <p class="text-gray-600 text-xl max-w-2xl mx-auto">Browse our most requested professional services</p>
     </div>
     
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <a href="{% url 'services_by_category' 'Plumbing' %}">
-        {% include 'xpertshub_app/components/service_card.html' with icon='bx-wrench' title='Plumbing' description='Pipes, leaks, installations' %}
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <a href="{% url 'services_by_category' 'Plumbing' %}" class="group">
+        <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 card-hover group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:to-purple-50">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class='bx bx-wrench text-4xl text-white'></i>
+            </div>
+            <h3 class="font-semibold text-xl text-gray-800 mb-3 group-hover:text-purple-600 transition-colors">Plumbing</h3>
+            <p class="text-gray-600 text-sm">Pipes, leaks, installations</p>
+          </div>
+        </div>
       </a>
-      <a href="{% url 'services_by_category' 'Painting' %}">
-        {% include 'xpertshub_app/components/service_card.html' with icon='bx-paint-roll' title='Painting' description='Interior & exterior painting' %}
+      
+      <a href="{% url 'services_by_category' 'Painting' %}" class="group">
+        <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 card-hover group-hover:bg-gradient-to-br group-hover:from-green-50 group-hover:to-blue-50">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class='bx bx-paint-roll text-4xl text-white'></i>
+            </div>
+            <h3 class="font-semibold text-xl text-gray-800 mb-3 group-hover:text-green-600 transition-colors">Painting</h3>
+            <p class="text-gray-600 text-sm">Interior & exterior painting</p>
+          </div>
+        </div>
       </a>
-      <a href="{% url 'services_by_category' 'Housekeeping' %}">
-        {% include 'xpertshub_app/components/service_card.html' with icon='bx-home-heart' title='Housekeeping' description='Cleaning & maintenance' %}
+      
+      <a href="{% url 'services_by_category' 'Housekeeping' %}" class="group">
+        <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 card-hover group-hover:bg-gradient-to-br group-hover:from-pink-50 group-hover:to-purple-50">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-pink-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class='bx bx-home-heart text-4xl text-white'></i>
+            </div>
+            <h3 class="font-semibold text-xl text-gray-800 mb-3 group-hover:text-pink-600 transition-colors">Housekeeping</h3>
+            <p class="text-gray-600 text-sm">Cleaning & maintenance</p>
+          </div>
+        </div>
       </a>
-      <a href="{% url 'services_by_category' 'Electricity' %}">
-        {% include 'xpertshub_app/components/service_card.html' with icon='bx-bolt' title='Electrical' description='Wiring & installations' %}
+      
+      <a href="{% url 'services_by_category' 'Electricity' %}" class="group">
+        <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 card-hover group-hover:bg-gradient-to-br group-hover:from-yellow-50 group-hover:to-orange-50">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class='bx bx-bolt text-4xl text-white'></i>
+            </div>
+            <h3 class="font-semibold text-xl text-gray-800 mb-3 group-hover:text-yellow-600 transition-colors">Electrical</h3>
+            <p class="text-gray-600 text-sm">Wiring & installations</p>
+          </div>
+        </div>
       </a>
-      <a href="{% url 'services_by_category' 'Air Conditioner' %}">
-        {% include 'xpertshub_app/components/service_card.html' with icon='bx-wind' title='Air Conditioning' description='AC repair & maintenance' %}
+      
+      <a href="{% url 'services_by_category' 'Air Conditioner' %}" class="group">
+        <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 card-hover group-hover:bg-gradient-to-br group-hover:from-cyan-50 group-hover:to-blue-50">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class='bx bx-wind text-4xl text-white'></i>
+            </div>
+            <h3 class="font-semibold text-xl text-gray-800 mb-3 group-hover:text-cyan-600 transition-colors">Air Conditioning</h3>
+            <p class="text-gray-600 text-sm">AC repair & maintenance</p>
+          </div>
+        </div>
       </a>
-      <a href="{% url 'services_by_category' 'Carpentry' %}">
-        {% include 'xpertshub_app/components/service_card.html' with icon='bx-hammer' title='Carpentry' description='Custom woodwork' %}
+      
+      <a href="{% url 'services_by_category' 'Carpentry' %}" class="group">
+        <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 card-hover group-hover:bg-gradient-to-br group-hover:from-amber-50 group-hover:to-orange-50">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class='bx bx-hammer text-4xl text-white'></i>
+            </div>
+            <h3 class="font-semibold text-xl text-gray-800 mb-3 group-hover:text-amber-600 transition-colors">Carpentry</h3>
+            <p class="text-gray-600 text-sm">Custom woodwork</p>
+          </div>
+        </div>
       </a>
-      <a href="{% url 'services_by_category' 'Gardening' %}">
-        {% include 'xpertshub_app/components/service_card.html' with icon='bx-leaf' title='Gardening' description='Landscaping & care' %}
+      
+      <a href="{% url 'services_by_category' 'Gardening' %}" class="group">
+        <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 card-hover group-hover:bg-gradient-to-br group-hover:from-green-50 group-hover:to-emerald-50">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class='bx bx-leaf text-4xl text-white'></i>
+            </div>
+            <h3 class="font-semibold text-xl text-gray-800 mb-3 group-hover:text-green-600 transition-colors">Gardening</h3>
+            <p class="text-gray-600 text-sm">Landscaping & care</p>
+          </div>
+        </div>
       </a>
-      <a href="{% url 'all_services' %}">
-        {% include 'xpertshub_app/components/service_card.html' with icon='bx-cog' title='All Services' description='Complete solutions' %}
+      
+      <a href="{% url 'all_services' %}" class="group">
+        <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 card-hover group-hover:bg-gradient-to-br group-hover:from-indigo-50 group-hover:to-purple-50">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class='bx bx-cog text-4xl text-white'></i>
+            </div>
+            <h3 class="font-semibold text-xl text-gray-800 mb-3 group-hover:text-indigo-600 transition-colors">All Services</h3>
+            <p class="text-gray-600 text-sm">Complete solutions</p>
+          </div>
+        </div>
       </a>
     </div>
   </div>
 </section>
 
 <!-- How It Works -->
-<section class="py-16 bg-white">
+<section class="py-20 bg-white">
   <div class="container mx-auto px-6">
-    <div class="text-center mb-12">
-      <h2 class="font-mono text-4xl font-bold text-gray-800 mb-4">How XpertsHub Works</h2>
-      <p class="text-gray-600 text-lg">Simple steps to get the help you need</p>
+    <div class="text-center mb-16 fade-in">
+      <h2 class="font-mono text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-6">How XpertsHub Works</h2>
+      <p class="text-gray-600 text-xl">Simple steps to get the help you need</p>
     </div>
     
-    <div class="grid md:grid-cols-3 gap-8">
-      {% include 'xpertshub_app/components/step_card.html' with step='1' icon='bx-search' title='Browse Services' description='Find the perfect service provider for your needs' %}
-      {% include 'xpertshub_app/components/step_card.html' with step='2' icon='bx-message-dots' title='Request Service' description='Contact professionals and get quotes' %}
-      {% include 'xpertshub_app/components/step_card.html' with step='3' icon='bx-check-circle' title='Get It Done' description='Enjoy professional service at your doorstep' %}
+    <div class="grid md:grid-cols-3 gap-12">
+      <div class="text-center fade-in">
+        <div class="relative mb-8">
+          <div class="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6 card-hover">
+            <i class='bx bx-search text-4xl text-white'></i>
+          </div>
+          <div class="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center font-mono font-bold text-gray-900 shadow-lg">
+            1
+          </div>
+        </div>
+        <h3 class="font-mono text-2xl font-bold text-gray-800 mb-4">Browse Services</h3>
+        <p class="text-gray-600 text-lg">Find the perfect service provider for your needs</p>
+      </div>
+      
+      <div class="text-center fade-in">
+        <div class="relative mb-8">
+          <div class="w-24 h-24 bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-6 card-hover">
+            <i class='bx bx-message-dots text-4xl text-white'></i>
+          </div>
+          <div class="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center font-mono font-bold text-gray-900 shadow-lg">
+            2
+          </div>
+        </div>
+        <h3 class="font-mono text-2xl font-bold text-gray-800 mb-4">Request Service</h3>
+        <p class="text-gray-600 text-lg">Contact professionals and get quotes</p>
+      </div>
+      
+      <div class="text-center fade-in">
+        <div class="relative mb-8">
+          <div class="w-24 h-24 bg-gradient-to-br from-pink-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6 card-hover">
+            <i class='bx bx-check-circle text-4xl text-white'></i>
+          </div>
+          <div class="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center font-mono font-bold text-gray-900 shadow-lg">
+            3
+          </div>
+        </div>
+        <h3 class="font-mono text-2xl font-bold text-gray-800 mb-4">Get It Done</h3>
+        <p class="text-gray-600 text-lg">Enjoy professional service at your doorstep</p>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- Featured Services -->
 {% if featured_services %}
-<section class="py-16 bg-gray-50">
+<section class="py-20 bg-gradient-to-br from-purple-50 to-blue-50">
   <div class="container mx-auto px-6">
-    <div class="text-center mb-12">
-      <h2 class="font-mono text-4xl font-bold text-gray-800 mb-4">Featured Services</h2>
-      <p class="text-gray-600 text-lg">Most requested services from our top providers</p>
+    <div class="text-center mb-16 fade-in">
+      <h2 class="font-mono text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-6">Featured Services</h2>
+      <p class="text-gray-600 text-xl">Most requested services from our top providers</p>
     </div>
     
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {% for service in featured_services %}
-      <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-        <div class="flex items-start justify-between mb-4">
-          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-            <i class='bx bx-wrench text-xl text-blue-600'></i>
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 card-hover overflow-hidden">
+        <div class="p-8">
+          <div class="flex items-start justify-between mb-6">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+              <i class='bx bx-wrench text-2xl text-white'></i>
+            </div>
+            <span class="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-sm px-3 py-1 rounded-full font-medium">
+              {{ service.field }}
+            </span>
           </div>
-          <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-            {{ service.field }}
-          </span>
-        </div>
-        
-        <h3 class="font-semibold text-lg text-gray-800 mb-2">
-          <a href="{% url 'service_detail' service.id %}" class="hover:text-blue-600">
-            {{ service.name }}
-          </a>
-        </h3>
-        <p class="text-gray-600 text-sm mb-4">{{ service.description|truncatewords:15 }}</p>
-        
-        <div class="flex items-center justify-between">
-          <span class="text-xl font-bold text-blue-600">${{ service.price_per_hour }}/hr</span>
-          <a href="{% url 'service_detail' service.id %}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-            View Details
-          </a>
+          
+          <h3 class="font-semibold text-xl text-gray-800 mb-3">
+            <a href="{% url 'service_detail' service.id %}" class="hover:text-purple-600 transition-colors">
+              {{ service.name }}
+            </a>
+          </h3>
+          <p class="text-gray-600 text-sm mb-6">{{ service.description|truncatewords:15 }}</p>
+          
+          <div class="flex items-center justify-between">
+            <span class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">${{ service.price_per_hour }}/hr</span>
+            <a href="{% url 'service_detail' service.id %}" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-blue-600 transition-all duration-300 hover:scale-105">
+              View Details
+            </a>
+          </div>
         </div>
       </div>
       {% endfor %}
     </div>
     
-    <div class="text-center mt-8">
-      <a href="{% url 'all_services' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+    <div class="text-center mt-12 fade-in">
+      <a href="{% url 'all_services' %}" class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-2xl">
         View All Services
       </a>
     </div>
@@ -123,29 +239,45 @@
 {% endif %}
 
 <!-- Stats Section -->
-<section class="py-16 bg-blue-600 text-white">
-  <div class="container mx-auto px-6">
+<section class="py-20 bg-gradient-to-r from-purple-600 to-blue-600 text-white relative overflow-hidden">
+  <div class="absolute inset-0 bg-black/20"></div>
+  <div class="container mx-auto px-6 relative z-10">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-      {% include 'xpertshub_app/components/stat_card.html' with number='500+' label='Service Providers' %}
-      {% include 'xpertshub_app/components/stat_card.html' with number='1000+' label='Happy Customers' %}
-      {% include 'xpertshub_app/components/stat_card.html' with number='12' label='Service Categories' %}
-      {% include 'xpertshub_app/components/stat_card.html' with number='24/7' label='Support Available' %}
+      <div class="fade-in">
+        <div class="font-mono text-5xl font-bold mb-3 animate-pulse">500+</div>
+        <div class="text-purple-200 font-medium text-lg">Service Providers</div>
+      </div>
+      <div class="fade-in">
+        <div class="font-mono text-5xl font-bold mb-3 animate-pulse">1000+</div>
+        <div class="text-purple-200 font-medium text-lg">Happy Customers</div>
+      </div>
+      <div class="fade-in">
+        <div class="font-mono text-5xl font-bold mb-3 animate-pulse">12</div>
+        <div class="text-purple-200 font-medium text-lg">Service Categories</div>
+      </div>
+      <div class="fade-in">
+        <div class="font-mono text-5xl font-bold mb-3 animate-pulse">24/7</div>
+        <div class="text-purple-200 font-medium text-lg">Support Available</div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- CTA Section -->
-<section class="py-16 bg-gray-900 text-white">
-  <div class="container mx-auto px-6 text-center">
-    <h2 class="font-mono text-4xl font-bold mb-4">Ready to Get Started?</h2>
-    <p class="text-xl mb-8 opacity-90">Join thousands of satisfied customers and service providers</p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a href="{% url 'customer_register' %}" class="bg-yellow-400 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-colors">
-        Sign Up as Customer
-      </a>
-      <a href="{% url 'company_register' %}" class="bg-blue-600 text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors">
-        Join as Provider
-      </a>
+<section class="py-20 bg-gray-900 text-white relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-purple-900/50 to-blue-900/50"></div>
+  <div class="container mx-auto px-6 text-center relative z-10">
+    <div class="bounce-in">
+      <h2 class="font-mono text-5xl font-bold mb-6">Ready to Get Started?</h2>
+      <p class="text-xl mb-10 opacity-90 max-w-2xl mx-auto">Join thousands of satisfied customers and service providers</p>
+      <div class="flex flex-col sm:flex-row gap-6 justify-center">
+        <a href="{% url 'customer_register' %}" class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-2xl">
+          <i class='bx bx-user-plus mr-2'></i>Sign Up as Customer
+        </a>
+        <a href="{% url 'company_register' %}" class="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-10 py-4 rounded-xl font-semibold text-lg hover:from-yellow-500 hover:to-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
+          <i class='bx bx-briefcase mr-2'></i>Join as Provider
+        </a>
+      </div>
     </div>
   </div>
 </section>
