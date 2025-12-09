@@ -42,18 +42,56 @@
         Service Requests
       </h3>
       {% if profile_user.service_requests.all %}
-        <div class="space-y-3">
+        <div class="space-y-4">
           {% for request in profile_user.service_requests.all %}
-          <div class="border-l-4 border-blue-500 pl-4 py-2">
-            <h4 class="font-medium text-gray-800">{{ request.service.name }}</h4>
-            <p class="text-sm text-gray-600">{{ request.service.field }}</p>
-            <p class="text-sm text-gray-500">Cost: ${{ request.calculated_cost }}</p>
-            <p class="text-xs text-gray-400">{{ request.date_requested|date:"M d, Y" }}</p>
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h4 class="font-medium text-gray-800">
+                  <a href="{% url 'service_detail' request.service.id %}" class="hover:text-blue-600">
+                    {{ request.service.name }}
+                  </a>
+                </h4>
+                <p class="text-sm text-gray-600">{{ request.service.field }}</p>
+                <p class="text-sm text-gray-500">
+                  by <a href="{% url 'profile' request.service.company.username %}" class="hover:text-blue-600">
+                    {{ request.service.company.username }}
+                  </a>
+                </p>
+              </div>
+              <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                Requested
+              </span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-gray-600">Hours:</span>
+                <span class="font-medium">{{ request.service_time_hours }}</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Total Cost:</span>
+                <span class="font-medium text-green-600">${{ request.calculated_cost }}</span>
+              </div>
+            </div>
+            
+            <div class="mt-3 pt-3 border-t border-gray-100">
+              <div class="flex justify-between items-center text-xs text-gray-500">
+                <span>{{ request.date_requested|date:"M d, Y \a\t g:i A" }}</span>
+                <span>Address: {{ request.address|truncatewords:5 }}</span>
+              </div>
+            </div>
           </div>
           {% endfor %}
         </div>
       {% else %}
-        <p class="text-gray-500 text-center py-4">No service requests yet</p>
+        <div class="text-center py-8">
+          <i class='bx bx-search text-4xl text-gray-300 mb-2'></i>
+          <p class="text-gray-500 mb-4">No service requests yet</p>
+          <a href="{% url 'all_services' %}" class="text-blue-600 hover:text-blue-800 font-medium">
+            Browse Available Services
+          </a>
+        </div>
       {% endif %}
     </div>
   </div>
