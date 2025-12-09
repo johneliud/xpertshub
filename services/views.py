@@ -2,9 +2,10 @@ from django.shortcuts import render
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
+from django.db.models import Count
 from .forms import ServiceCreationForm
 from .models import Service
 
@@ -42,3 +43,41 @@ class AllServicesView(ListView):
 
     def get_queryset(self):
         return Service.objects.filter(status='approved').order_by('-date_created')
+
+class ServicesByCategoryView(ListView):
+    model = Service
+    template_name = 'services/category_services.html'
+    context_object_name = 'services'
+    paginate_by = 12
+
+    def get_queryset(self):
+        self.category = self.kwargs['field']
+        return Service.objects.filter(status='approved', field=self.category).order_by('-date_created')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = self.category
+        return context
+
+class ServiceDetailView(DetailView):
+    model = Service
+    template_name = 'services/service_detail.html'
+    context_object_name = 'service'
+
+    def get_queryset(self):
+        return Service.objects.filter(status='approved')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get related services in the same category (excluding current service)
+        context['related_services'] = Service.objects.filter(
+            status='approved',
+            field=self.object.field
+        ).exclude(id=self.object.id).order_by('-date_created')[:3]
+        return context
+
+def get_most_requested_services():
+    """Helper function to get most requested services for home page"""
+    return Service.objects.filter(status='approved').annotate(
+        request_count=Count('requests')
+    ).order_by('-request_count', '-date_created')[:6]
