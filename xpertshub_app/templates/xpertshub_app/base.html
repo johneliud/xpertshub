@@ -35,10 +35,10 @@
         <div class="flex items-center justify-between">
           <!-- Logo -->
           <div class="flex items-center space-x-3 slide-in">
-            <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+            <!--<div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
               <i class="bx bx-wrench text-2xl text-white"></i>
-            </div>
-            <a class="font-mono text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent" href="{% url 'home' %}">
+            </div>-->
+            <a class="font-mono text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent" href="{% url 'home' %}">
               XpertsHub
             </a>
           </div>
@@ -46,32 +46,32 @@
           <!-- Navigation Menu -->
           <div class="hidden md:flex items-center space-x-8">
             <a href="{% url 'home' %}" class="text-gray-700 hover:text-purple-600 font-medium transition-all duration-300 hover:scale-105">
-              <i class="bx bx-home mr-1"></i>Home
+              Home
             </a>
             
             <!-- Services Dropdown -->
             <div class="relative dropdown">
               <button class="text-gray-700 hover:text-purple-600 font-medium transition-all duration-300 hover:scale-105 flex items-center">
-                <i class="bx bx-grid-alt mr-1"></i>Services
+                Services
                 <i class="bx bx-chevron-down ml-1"></i>
               </button>
               <div class="dropdown-menu absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 hidden">
                 <div class="p-4">
                   <a href="{% url 'all_services' %}" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    <i class="bx bx-list-ul mr-2"></i>All Services
+                    All Services
                   </a>
                   <hr class="my-2">
                   <a href="{% url 'services_by_category' 'Plumbing' %}" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    <i class="bx bx-wrench mr-2"></i>Plumbing
+                    Plumbing
                   </a>
                   <a href="{% url 'services_by_category' 'Electricity' %}" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    <i class="bx bx-bolt mr-2"></i>Electrical
+                    Electrical
                   </a>
                   <a href="{% url 'services_by_category' 'Painting' %}" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    <i class="bx bx-paint-roll mr-2"></i>Painting
+                    Painting
                   </a>
                   <a href="{% url 'services_by_category' 'Housekeeping' %}" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    <i class="bx bx-home-heart mr-2"></i>Housekeeping
+                    Housekeeping
                   </a>
                 </div>
               </div>
@@ -84,7 +84,7 @@
             {% endif %}
             
             <a href="{% url 'about' %}" class="text-gray-700 hover:text-purple-600 font-medium transition-all duration-300 hover:scale-105">
-              <i class="bx bx-info-circle mr-1"></i>About
+              About
             </a>
           </div>
 
@@ -147,10 +147,10 @@
         <div class="grid md:grid-cols-4 gap-8">
           <div class="fade-in">
             <div class="flex items-center space-x-3 mb-4">
-              <div class="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
+              <!--<div class="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
                 <i class="bx bx-wrench text-lg text-white"></i>
-              </div>
-              <span class="font-mono text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">XpertsHub</span>
+              </div>-->
+              <span class="font-mono text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">XpertsHub</span>
             </div>
             <p class="text-gray-400 mb-4">Connecting customers with trusted service providers across all categories.</p>
             <div class="flex space-x-4">
