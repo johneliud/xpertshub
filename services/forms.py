@@ -1,5 +1,5 @@
 from django import forms
-from .models import Service
+from .models import Service, ServiceRequest
 
 class ServiceCreationForm(forms.ModelForm):
     class Meta:
@@ -48,3 +48,31 @@ class ServiceCreationForm(forms.ModelForm):
                 )
         
         return field
+
+class ServiceRequestForm(forms.ModelForm):
+    class Meta:
+        model = ServiceRequest
+        fields = ['address', 'service_time_hours']
+        widgets = {
+            'address': forms.Textarea(attrs={
+                'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Enter your complete address',
+                'rows': 3,
+            }),
+            'service_time_hours': forms.NumberInput(attrs={
+                'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Estimated hours needed',
+                'step': '0.5',
+                'min': '0.5',
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.service = kwargs.pop('service', None)
+        super().__init__(*args, **kwargs)
+
+    def clean_service_time_hours(self):
+        hours = self.cleaned_data.get('service_time_hours')
+        if hours and hours < 0.5:
+            raise forms.ValidationError("Minimum service time is 0.5 hours")
+        return hours
