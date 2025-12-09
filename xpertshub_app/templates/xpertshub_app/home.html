@@ -31,14 +31,30 @@
     </div>
     
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {% include 'xpertshub_app/components/service_card.html' with icon='bx-wrench' title='Plumbing' description='Pipes, leaks, installations' %}
-      {% include 'xpertshub_app/components/service_card.html' with icon='bx-paint-roll' title='Painting' description='Interior & exterior painting' %}
-      {% include 'xpertshub_app/components/service_card.html' with icon='bx-home-heart' title='Housekeeping' description='Cleaning & maintenance' %}
-      {% include 'xpertshub_app/components/service_card.html' with icon='bx-bolt' title='Electrical' description='Wiring & installations' %}
-      {% include 'xpertshub_app/components/service_card.html' with icon='bx-wind' title='Air Conditioning' description='AC repair & maintenance' %}
-      {% include 'xpertshub_app/components/service_card.html' with icon='bx-hammer' title='Carpentry' description='Custom woodwork' %}
-      {% include 'xpertshub_app/components/service_card.html' with icon='bx-leaf' title='Gardening' description='Landscaping & care' %}
-      {% include 'xpertshub_app/components/service_card.html' with icon='bx-cog' title='All Services' description='Complete solutions' %}
+      <a href="{% url 'services_by_category' 'Plumbing' %}">
+        {% include 'xpertshub_app/components/service_card.html' with icon='bx-wrench' title='Plumbing' description='Pipes, leaks, installations' %}
+      </a>
+      <a href="{% url 'services_by_category' 'Painting' %}">
+        {% include 'xpertshub_app/components/service_card.html' with icon='bx-paint-roll' title='Painting' description='Interior & exterior painting' %}
+      </a>
+      <a href="{% url 'services_by_category' 'Housekeeping' %}">
+        {% include 'xpertshub_app/components/service_card.html' with icon='bx-home-heart' title='Housekeeping' description='Cleaning & maintenance' %}
+      </a>
+      <a href="{% url 'services_by_category' 'Electricity' %}">
+        {% include 'xpertshub_app/components/service_card.html' with icon='bx-bolt' title='Electrical' description='Wiring & installations' %}
+      </a>
+      <a href="{% url 'services_by_category' 'Air Conditioner' %}">
+        {% include 'xpertshub_app/components/service_card.html' with icon='bx-wind' title='Air Conditioning' description='AC repair & maintenance' %}
+      </a>
+      <a href="{% url 'services_by_category' 'Carpentry' %}">
+        {% include 'xpertshub_app/components/service_card.html' with icon='bx-hammer' title='Carpentry' description='Custom woodwork' %}
+      </a>
+      <a href="{% url 'services_by_category' 'Gardening' %}">
+        {% include 'xpertshub_app/components/service_card.html' with icon='bx-leaf' title='Gardening' description='Landscaping & care' %}
+      </a>
+      <a href="{% url 'all_services' %}">
+        {% include 'xpertshub_app/components/service_card.html' with icon='bx-cog' title='All Services' description='Complete solutions' %}
+      </a>
     </div>
   </div>
 </section>
@@ -58,6 +74,53 @@
     </div>
   </div>
 </section>
+
+<!-- Featured Services -->
+{% if featured_services %}
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-12">
+      <h2 class="font-mono text-4xl font-bold text-gray-800 mb-4">Featured Services</h2>
+      <p class="text-gray-600 text-lg">Most requested services from our top providers</p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for service in featured_services %}
+      <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+            <i class='bx bx-wrench text-xl text-blue-600'></i>
+          </div>
+          <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+            {{ service.field }}
+          </span>
+        </div>
+        
+        <h3 class="font-semibold text-lg text-gray-800 mb-2">
+          <a href="{% url 'service_detail' service.id %}" class="hover:text-blue-600">
+            {{ service.name }}
+          </a>
+        </h3>
+        <p class="text-gray-600 text-sm mb-4">{{ service.description|truncatewords:15 }}</p>
+        
+        <div class="flex items-center justify-between">
+          <span class="text-xl font-bold text-blue-600">${{ service.price_per_hour }}/hr</span>
+          <a href="{% url 'service_detail' service.id %}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            View Details
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <div class="text-center mt-8">
+      <a href="{% url 'all_services' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+        View All Services
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}
 
 <!-- Stats Section -->
 <section class="py-16 bg-blue-600 text-white">
