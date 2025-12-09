@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 from .forms import ServiceCreationForm
 from .models import Service
 
@@ -33,3 +33,12 @@ class CreateServiceView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'username': self.request.user.username})
+
+class AllServicesView(ListView):
+    model = Service
+    template_name = 'services/all_services.html'
+    context_object_name = 'services'
+    paginate_by = 12
+
+    def get_queryset(self):
+        return Service.objects.filter(status='approved').order_by('-date_created')
