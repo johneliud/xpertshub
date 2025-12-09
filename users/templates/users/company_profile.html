@@ -37,15 +37,28 @@
 
     <!-- Services Offered -->
     <div class="bg-white rounded-lg shadow-md p-6">
-      <h3 class="font-semibold text-lg text-gray-800 mb-4 flex items-center">
-        <i class='bx bx-wrench text-xl text-blue-600 mr-2'></i>
-        Services Offered
-      </h3>
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold text-lg text-gray-800 flex items-center">
+          <i class='bx bx-wrench text-xl text-blue-600 mr-2'></i>
+          Services Offered
+        </h3>
+        {% if user == profile_user %}
+        <a href="{% url 'create_service' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+          <i class='bx bx-plus mr-1'></i>Add Service
+        </a>
+        {% endif %}
+      </div>
+      
       {% if profile_user.services_provided.all %}
         <div class="space-y-3">
           {% for service in profile_user.services_provided.all %}
-          <div class="border-l-4 border-green-500 pl-4 py-2">
-            <h4 class="font-medium text-gray-800">{{ service.name }}</h4>
+          <div class="border-l-4 {% if service.status == 'approved' %}border-green-500{% elif service.status == 'pending' %}border-yellow-500{% else %}border-red-500{% endif %} pl-4 py-2">
+            <div class="flex items-center justify-between">
+              <h4 class="font-medium text-gray-800">{{ service.name }}</h4>
+              <span class="text-xs px-2 py-1 rounded-full {% if service.status == 'approved' %}bg-green-100 text-green-800{% elif service.status == 'pending' %}bg-yellow-100 text-yellow-800{% else %}bg-red-100 text-red-800{% endif %}">
+                {{ service.get_status_display }}
+              </span>
+            </div>
             <p class="text-sm text-gray-600">{{ service.field }}</p>
             <p class="text-sm text-gray-500">${{ service.price_per_hour }}/hour</p>
             <p class="text-xs text-gray-400">{{ service.date_created|date:"M d, Y" }}</p>
@@ -53,7 +66,15 @@
           {% endfor %}
         </div>
       {% else %}
-        <p class="text-gray-500 text-center py-4">No services offered yet</p>
+        <div class="text-center py-8">
+          <i class='bx bx-wrench text-4xl text-gray-300 mb-2'></i>
+          <p class="text-gray-500 mb-4">No services offered yet</p>
+          {% if user == profile_user %}
+          <a href="{% url 'create_service' %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+            <i class='bx bx-plus mr-2'></i>Create Your First Service
+          </a>
+          {% endif %}
+        </div>
       {% endif %}
     </div>
   </div>

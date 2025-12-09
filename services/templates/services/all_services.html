@@ -1,0 +1,76 @@
+{% extends "xpertshub_app/base.html" %}
+
+{% block title %}All Services{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+  <div class="text-center mb-8">
+    <h1 class="font-mono text-4xl font-bold text-gray-800 mb-4">Available Services</h1>
+    <p class="text-gray-600 text-lg">Browse professional services from verified providers</p>
+  </div>
+
+  {% if services %}
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for service in services %}
+      <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+            <i class='bx bx-wrench text-xl text-blue-600'></i>
+          </div>
+          <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+            {{ service.field }}
+          </span>
+        </div>
+        
+        <h3 class="font-semibold text-lg text-gray-800 mb-2">{{ service.name }}</h3>
+        <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ service.description }}</p>
+        
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-2xl font-bold text-blue-600">${{ service.price_per_hour }}</span>
+          <span class="text-gray-500 text-sm">per hour</span>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div class="flex items-center text-sm text-gray-500">
+            <i class='bx bx-building mr-1'></i>
+            <a href="{% url 'profile' service.company.username %}" class="hover:text-blue-600">
+              {{ service.company.username }}
+            </a>
+          </div>
+          <span class="text-xs text-gray-400">{{ service.date_created|date:"M d, Y" }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="flex justify-center mt-8">
+      <nav class="flex items-center space-x-2">
+        {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-2 text-gray-500 hover:text-blue-600">
+            <i class='bx bx-chevron-left'></i>
+          </a>
+        {% endif %}
+        
+        <span class="px-3 py-2 text-gray-700">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+        
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-2 text-gray-500 hover:text-blue-600">
+            <i class='bx bx-chevron-right'></i>
+          </a>
+        {% endif %}
+      </nav>
+    </div>
+    {% endif %}
+  {% else %}
+    <div class="text-center py-12">
+      <i class='bx bx-search text-6xl text-gray-300 mb-4'></i>
+      <h3 class="text-xl font-semibold text-gray-600 mb-2">No Services Available</h3>
+      <p class="text-gray-500">Check back later for new services from our providers.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

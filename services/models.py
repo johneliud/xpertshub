@@ -16,11 +16,26 @@ class Service(models.Model):
         ('Water Heaters', 'Water Heaters'),
     ]
 
+    STATUS_CHOICES = [
+        ('pending', 'Pending Approval'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+
     name = models.CharField(max_length=255)
     description = models.TextField()
     field = models.CharField(max_length=50, choices=FIELD_OF_WORK_CHOICES)
     price_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     date_created = models.DateTimeField(auto_now_add=True)
+    date_approved = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='approved_services'
+    )
     company = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -29,7 +44,7 @@ class Service(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.get_status_display()}"
 
 class ServiceRequest(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='requests')
