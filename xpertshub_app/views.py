@@ -12,6 +12,9 @@ def home(request):
     }
     return render(request, 'xpertshub_app/home.html', context)
 
+def about(request):
+    return render(request, 'xpertshub_app/about.html')
+
 class UserLogoutView(LogoutView):
     http_method_names = ['get', 'post']
     
