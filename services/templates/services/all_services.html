@@ -22,7 +22,11 @@
           </span>
         </div>
         
-        <h3 class="font-semibold text-lg text-gray-800 mb-2">{{ service.name }}</h3>
+        <h3 class="font-semibold text-lg text-gray-800 mb-2">
+          <a href="{% url 'service_detail' service.id %}" class="hover:text-blue-600">
+            {{ service.name }}
+          </a>
+        </h3>
         <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ service.description }}</p>
         
         <div class="flex items-center justify-between mb-4">
@@ -37,7 +41,9 @@
               {{ service.company.username }}
             </a>
           </div>
-          <span class="text-xs text-gray-400">{{ service.date_created|date:"M d, Y" }}</span>
+          <a href="{% url 'service_detail' service.id %}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            View Details
+          </a>
         </div>
       </div>
       {% endfor %}
