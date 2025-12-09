@@ -47,9 +47,9 @@
         <div class="bg-blue-50 border border-blue-200 p-6 rounded-lg">
           <h3 class="font-semibold text-lg text-gray-800 mb-3">Interested in this service?</h3>
           <p class="text-gray-600 mb-4">Contact the service provider to discuss your requirements and schedule.</p>
-          <button class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+          <a href="{% url 'request_service' service.id %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block">
             <i class='bx bx-message mr-2'></i>Request Service
-          </button>
+          </a>
         </div>
         {% endif %}
       </div>
