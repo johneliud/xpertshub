@@ -1,97 +1,144 @@
-{% extends "xpertshub_app/base.html" %} {% block content %}
-<div class="flex items-center justify-center" style="min-height: calc(100vh - 120px);">
-  <div class="w-3/4">
-    <div class="bg-white p-8 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold text-center mb-6">
-        Create a Customer Account
-      </h2>
-      <form method="post">
+{% extends "xpertshub_app/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+
+<div class="min-h-screen flex">
+  <!-- Left Side - Graphic/Text Section -->
+  <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-600 via-teal-600 to-blue-600 relative overflow-hidden auth-left-panel">
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="relative z-10 flex flex-col justify-center items-center text-white p-12">
+      <div class="text-center space-y-6">
+        <div class="w-24 h-24 mx-auto bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm floating-element">
+          <i class='bx bx-user-plus text-5xl'></i>
+        </div>
+        <h1 class="text-4xl font-bold">Join as a Customer</h1>
+        <p class="text-xl text-white/90 max-w-md">
+          Get access to trusted professionals for all your service needs.
+        </p>
+        <div class="space-y-3 text-left">
+          <div class="flex items-center space-x-3">
+            <i class='bx bx-check-circle text-green-300 text-xl'></i>
+            <span>Browse verified service providers</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <i class='bx bx-check-circle text-green-300 text-xl'></i>
+            <span>Request quotes and compare prices</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <i class='bx bx-check-circle text-green-300 text-xl'></i>
+            <span>Track your service requests</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <i class='bx bx-check-circle text-green-300 text-xl'></i>
+            <span>Rate and review services</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Decorative Elements -->
+    <div class="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full blur-xl floating-element"></div>
+    <div class="absolute bottom-20 right-20 w-40 h-40 bg-white/10 rounded-full blur-xl floating-element" style="animation-delay: -3s;"></div>
+  </div>
+
+  <!-- Right Side - Form Section -->
+  <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 auth-right-panel">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8">
+        <div class="lg:hidden w-16 h-16 mx-auto bg-gradient-to-r from-green-600 to-teal-600 rounded-full flex items-center justify-center mb-4">
+          <i class='bx bx-user-plus text-3xl text-white'></i>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900">Create Customer Account</h2>
+        <p class="text-gray-600 mt-2">Start finding the services you need</p>
+      </div>
+
+      <form method="post" class="space-y-6" id="customerRegisterForm">
         {% csrf_token %}
 
-        <div class="mb-4">
-          <label
-            for="id_username"
-            class="block text-gray-700 text-sm font-bold mb-2"
-            >Username</label
-          >
+        <div>
+          <label for="id_username" class="block text-sm font-medium text-gray-700 mb-2">
+            Username
+          </label>
           {{ form.username }}
         </div>
 
-        <div class="mb-4">
-          <label
-            for="id_email"
-            class="block text-gray-700 text-sm font-bold mb-2"
-            >Email</label
-          >
+        <div>
+          <label for="id_email" class="block text-sm font-medium text-gray-700 mb-2">
+            Email Address
+          </label>
           {{ form.email }}
         </div>
 
-        <div class="mb-4">
-          <label
-            for="id_date_of_birth"
-            class="block text-gray-700 text-sm font-bold mb-2"
-            >Date of Birth</label
-          >
+        <div>
+          <label for="id_date_of_birth" class="block text-sm font-medium text-gray-700 mb-2">
+            Date of Birth
+          </label>
           {{ form.date_of_birth }}
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label
-              for="id_password"
-              class="block text-gray-700 text-sm font-bold mb-2"
-              >Password</label
-            >
+            <label for="id_password" class="block text-sm font-medium text-gray-700 mb-2">
+              Password
+            </label>
             <div class="relative">
               {{ form.password }}
               <button
                 type="button"
-                class="toggle-password absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                class="toggle-password absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                <i class='bx bx-eye text-lg'></i>
+                <i class='bx bx-eye text-xl'></i>
               </button>
             </div>
           </div>
 
           <div>
-            <label
-              for="id_password_confirmation"
-              class="block text-gray-700 text-sm font-bold mb-2"
-              >Confirm Password</label
-            >
+            <label for="id_password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
+              Confirm Password
+            </label>
             <div class="relative">
               {{ form.password_confirmation }}
               <button
                 type="button"
-                class="toggle-password absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                class="toggle-password absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                <i class='bx bx-eye text-lg'></i>
+                <i class='bx bx-eye text-xl'></i>
               </button>
             </div>
           </div>
         </div>
 
         {% if form.errors %}
-        <div
-          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-          role="alert"
-        >
-          {% for field, error_list in form.errors.items %} {% for error in error_list %}
-          <p>{{ error }}</p>
-          {% endfor %} {% endfor %}
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg auth-error">
+          {% for field, error_list in form.errors.items %}
+            {% for error in error_list %}
+              <p class="text-sm">{{ error }}</p>
+            {% endfor %}
+          {% endfor %}
         </div>
         {% endif %}
 
-        <div class="flex items-center justify-between">
-          <button
-            type="submit"
-            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Register
-          </button>
+        <button
+          type="submit"
+          class="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-semibold py-3 px-4 rounded-lg auth-button"
+        >
+          Create Account
+        </button>
+
+        <div class="text-center text-sm text-gray-600">
+          Already have an account?
+          <a href="{% url 'login' %}" class="text-green-600 hover:text-green-800 font-medium transition-colors duration-200">Sign in</a>
+        </div>
+
+        <div class="text-center text-sm text-gray-600">
+          Want to offer services?
+          <a href="{% url 'company_register' %}" class="text-green-600 hover:text-green-800 font-medium transition-colors duration-200">Register as Company</a>
         </div>
       </form>
     </div>
   </div>
 </div>
+
+<script src="{% static 'js/password_toggle.js' %}"></script>
 {% endblock %}
