@@ -1,5 +1,5 @@
 from django import forms
-from .models import Service, ServiceRequest
+from .models import Service, ServiceRequest, Rating
 
 class ServiceCreationForm(forms.ModelForm):
     class Meta:
@@ -76,3 +76,18 @@ class ServiceRequestForm(forms.ModelForm):
         if hours and hours < 0.5:
             raise forms.ValidationError("Minimum service time is 0.5 hours")
         return hours
+
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ['rating', 'review']
+        widgets = {
+            'rating': forms.Select(choices=[(i, f'{i} Star{"s" if i != 1 else ""}') for i in range(1, 6)], attrs={
+                'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+            }),
+            'review': forms.Textarea(attrs={
+                'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                'placeholder': 'Share your experience (optional)',
+                'rows': 4,
+            }),
+        }
