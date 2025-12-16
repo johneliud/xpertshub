@@ -5,9 +5,9 @@ from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
-from django.db.models import Count
-from .forms import ServiceCreationForm, ServiceRequestForm
-from .models import Service, ServiceRequest
+from django.db.models import Count, Avg
+from .forms import ServiceCreationForm, ServiceRequestForm, RatingForm
+from .models import Service, ServiceRequest, Rating
 
 class CreateServiceView(LoginRequiredMixin, CreateView):
     model = Service
@@ -74,6 +74,15 @@ class ServiceDetailView(DetailView):
             status='approved',
             field=self.object.field
         ).exclude(id=self.object.id).order_by('-date_created')[:3]
+        
+        # Get ratings for this service
+        context['ratings'] = self.object.ratings.all().order_by('-date_created')
+        context['user_has_rated'] = False
+        if self.request.user.is_authenticated and self.request.user.user_type == 'customer':
+            context['user_has_rated'] = Rating.objects.filter(
+                service=self.object, customer=self.request.user
+            ).exists()
+        
         return context
 
 class RequestServiceView(LoginRequiredMixin, CreateView):
@@ -134,3 +143,36 @@ def get_most_requested_services():
     return Service.objects.filter(status='approved').annotate(
         request_count=Count('requests')
     ).order_by('-request_count', '-date_created')[:6]
+
+class RateServiceView(LoginRequiredMixin, CreateView):
+    model = Rating
+    form_class = RatingForm
+    template_name = 'services/rate_service.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated or request.user.user_type != 'customer':
+            messages.error(request, 'Only customers can rate services.')
+            return redirect('home')
+        
+        self.service = get_object_or_404(Service, pk=self.kwargs['service_id'], status='approved')
+        
+        # Check if customer has already rated this service
+        if Rating.objects.filter(service=self.service, customer=request.user).exists():
+            messages.error(request, 'You have already rated this service.')
+            return redirect('service_detail', pk=self.service.pk)
+        
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['service'] = self.service
+        return context
+
+    def form_valid(self, form):
+        form.instance.service = self.service
+        form.instance.customer = self.request.user
+        messages.success(self.request, 'Thank you for your rating!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('service_detail', kwargs={'pk': self.service.pk})
