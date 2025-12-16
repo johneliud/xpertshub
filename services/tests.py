@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from .models import Service, ServiceRequest
+from .models import Service, ServiceRequest, Rating
 from users.models import User
 
 class ServiceCreationTests(TestCase):
@@ -294,3 +294,106 @@ class ServiceRequestModelTests(TestCase):
         )
         expected_cost = self.service.price_per_hour * 3
         self.assertEqual(request.calculated_cost, expected_cost)
+
+class RatingSystemTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.customer = User.objects.create_user(
+            username='customer',
+            email='customer@test.com',
+            password='testpass123',
+            user_type='customer'
+        )
+        self.company = User.objects.create_user(
+            username='company',
+            email='company@test.com',
+            password='testpass123',
+            user_type='company',
+            field_of_work='Plumbing'
+        )
+        self.service = Service.objects.create(
+            name='Test Service',
+            description='Test service',
+            field='Plumbing',
+            price_per_hour=50.00,
+            company=self.company,
+            status='approved'
+        )
+
+    def test_customer_can_rate_service(self):
+        """Test customer can rate a service"""
+        self.client.login(username='customer@test.com', password='testpass123')
+        response = self.client.post(reverse('rate_service', kwargs={'service_id': self.service.pk}), {
+            'rating': 5,
+            'review': 'Excellent service!'
+        })
+        self.assertEqual(response.status_code, 302)  # Redirect after success
+        self.assertTrue(Rating.objects.filter(
+            service=self.service,
+            customer=self.customer,
+            rating=5
+        ).exists())
+
+    def test_customer_cannot_rate_same_service_twice(self):
+        """Test customer cannot rate the same service twice"""
+        Rating.objects.create(
+            service=self.service,
+            customer=self.customer,
+            rating=4,
+            review='Good service'
+        )
+        
+        self.client.login(username='customer@test.com', password='testpass123')
+        response = self.client.get(reverse('rate_service', kwargs={'service_id': self.service.pk}))
+        self.assertEqual(response.status_code, 302)  # Redirected away
+
+    def test_company_cannot_rate_service(self):
+        """Test company cannot rate services"""
+        self.client.login(username='company@test.com', password='testpass123')
+        response = self.client.get(reverse('rate_service', kwargs={'service_id': self.service.pk}))
+        self.assertEqual(response.status_code, 302)  # Redirected away
+
+    def test_anonymous_user_cannot_rate_service(self):
+        """Test anonymous user cannot rate service"""
+        response = self.client.get(reverse('rate_service', kwargs={'service_id': self.service.pk}))
+        self.assertEqual(response.status_code, 302)  # Redirected to login
+
+    def test_service_average_rating_calculation(self):
+        """Test service average rating is calculated correctly"""
+        Rating.objects.create(service=self.service, customer=self.customer, rating=5)
+        
+        customer2 = User.objects.create_user(
+            username='customer2',
+            email='customer2@test.com',
+            password='testpass123',
+            user_type='customer'
+        )
+        Rating.objects.create(service=self.service, customer=customer2, rating=3)
+        
+        self.assertEqual(self.service.average_rating, 4.0)  # (5+3)/2 = 4.0
+        self.assertEqual(self.service.rating_count, 2)
+
+    def test_service_detail_shows_ratings(self):
+        """Test service detail page shows ratings"""
+        Rating.objects.create(
+            service=self.service,
+            customer=self.customer,
+            rating=5,
+            review='Great service!'
+        )
+        
+        response = self.client.get(reverse('service_detail', kwargs={'pk': self.service.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Great service!')
+        self.assertContains(response, 'customer')  # Customer username
+
+    def test_rating_model_string_representation(self):
+        """Test rating model string representation"""
+        rating = Rating.objects.create(
+            service=self.service,
+            customer=self.customer,
+            rating=4,
+            review='Good service'
+        )
+        expected_str = f"{self.customer.username} rated {self.service.name}: 4/5"
+        self.assertEqual(str(rating), expected_str)

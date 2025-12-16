@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CreateServiceView, AllServicesView, ServicesByCategoryView, ServiceDetailView, RequestServiceView, ServiceRequestsView
+from .views import CreateServiceView, AllServicesView, ServicesByCategoryView, ServiceDetailView, RequestServiceView, ServiceRequestsView, RateServiceView
 
 urlpatterns = [
     path('', AllServicesView.as_view(), name='all_services'),
@@ -8,4 +8,5 @@ urlpatterns = [
     path('category/<str:field>/', ServicesByCategoryView.as_view(), name='services_by_category'),
     path('<int:pk>/', ServiceDetailView.as_view(), name='service_detail'),
     path('<int:service_id>/request/', RequestServiceView.as_view(), name='request_service'),
+    path('<int:service_id>/rate/', RateServiceView.as_view(), name='rate_service'),
 ]

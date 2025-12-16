@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from django.contrib import admin
 from django.utils import timezone
-from .models import Service, ServiceRequest
+from .models import Service, ServiceRequest, Rating
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
@@ -53,3 +53,10 @@ class ServiceRequestAdmin(admin.ModelAdmin):
     list_filter = ['date_requested', 'service__field']
     search_fields = ['service__name', 'customer__username', 'customer__email']
     readonly_fields = ['calculated_cost', 'date_requested']
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ['service', 'customer', 'rating', 'date_created']
+    list_filter = ['rating', 'date_created', 'service__field']
+    search_fields = ['service__name', 'customer__username', 'review']
+    readonly_fields = ['date_created']
