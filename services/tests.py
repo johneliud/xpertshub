@@ -397,3 +397,57 @@ class RatingSystemTests(TestCase):
         )
         expected_str = f"{self.customer.username} rated {self.service.name}: 4/5"
         self.assertEqual(str(rating), expected_str)
+
+class PaginationTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.company = User.objects.create_user(
+            username='company',
+            email='company@test.com',
+            password='testpass123',
+            user_type='company',
+            field_of_work='Plumbing'
+        )
+        
+        # Create 10 services to test pagination (paginate_by = 6)
+        self.services = []
+        for i in range(10):
+            service = Service.objects.create(
+                name=f'Test Service {i+1}',
+                description=f'Test service {i+1}',
+                field='Plumbing',
+                price_per_hour=50.00 + i,
+                company=self.company,
+                status='approved'
+            )
+            self.services.append(service)
+
+    def test_all_services_pagination(self):
+        """Test pagination on all services page"""
+        response = self.client.get(reverse('all_services'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['is_paginated'])
+        self.assertEqual(len(response.context['services']), 6)  # First page should have 6 services
+        
+        # Test second page
+        response = self.client.get(reverse('all_services') + '?page=2')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['services']), 4)  # Second page should have 4 services
+
+    def test_category_services_pagination(self):
+        """Test pagination on category services page"""
+        response = self.client.get(reverse('services_by_category', kwargs={'field': 'Plumbing'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['is_paginated'])
+        self.assertEqual(len(response.context['services']), 6)  # First page should have 6 services
+
+    def test_pagination_invalid_page(self):
+        """Test pagination with invalid page number"""
+        response = self.client.get(reverse('all_services') + '?page=999')
+        self.assertEqual(response.status_code, 404)  # Should return 404 for invalid page
+
+    def test_pagination_page_one_redirect(self):
+        """Test pagination page 1 behavior"""
+        response = self.client.get(reverse('all_services') + '?page=1')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page_obj'].number, 1)
