@@ -39,7 +39,7 @@ class AllServicesView(ListView):
     model = Service
     template_name = 'services/all_services.html'
     context_object_name = 'services'
-    paginate_by = 12
+    paginate_by = 6
 
     def get_queryset(self):
         return Service.objects.filter(status='approved').order_by('-date_created')
@@ -48,7 +48,7 @@ class ServicesByCategoryView(ListView):
     model = Service
     template_name = 'services/category_services.html'
     context_object_name = 'services'
-    paginate_by = 12
+    paginate_by = 6
 
     def get_queryset(self):
         self.category = self.kwargs['field']
