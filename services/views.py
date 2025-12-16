@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
-from django.db.models import Count, Avg
+from django.db.models import Count, Avg, Q
 from .forms import ServiceCreationForm, ServiceRequestForm, RatingForm
 from .models import Service, ServiceRequest, Rating
 
@@ -42,7 +42,52 @@ class AllServicesView(ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        return Service.objects.filter(status='approved').order_by('-date_created')
+        queryset = Service.objects.filter(status='approved')
+        
+        # Search functionality
+        search_query = self.request.GET.get('search')
+        if search_query:
+            queryset = queryset.filter(
+                Q(name__icontains=search_query) |
+                Q(description__icontains=search_query) |
+                Q(company__username__icontains=search_query)
+            )
+        
+        # Filter by category
+        category = self.request.GET.get('category')
+        if category and category != 'all':
+            queryset = queryset.filter(field=category)
+        
+        # Filter by price range
+        min_price = self.request.GET.get('min_price')
+        max_price = self.request.GET.get('max_price')
+        if min_price:
+            queryset = queryset.filter(price_per_hour__gte=min_price)
+        if max_price:
+            queryset = queryset.filter(price_per_hour__lte=max_price)
+        
+        # Sort by rating or price
+        sort_by = self.request.GET.get('sort')
+        if sort_by == 'price_low':
+            queryset = queryset.order_by('price_per_hour')
+        elif sort_by == 'price_high':
+            queryset = queryset.order_by('-price_per_hour')
+        elif sort_by == 'rating':
+            queryset = queryset.annotate(avg_rating=Avg('ratings__rating')).order_by('-avg_rating')
+        else:
+            queryset = queryset.order_by('-date_created')
+        
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('search', '')
+        context['selected_category'] = self.request.GET.get('category', 'all')
+        context['min_price'] = self.request.GET.get('min_price', '')
+        context['max_price'] = self.request.GET.get('max_price', '')
+        context['sort_by'] = self.request.GET.get('sort', 'newest')
+        context['categories'] = Service.FIELD_OF_WORK_CHOICES
+        return context
 
 class ServicesByCategoryView(ListView):
     model = Service
