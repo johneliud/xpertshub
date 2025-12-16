@@ -30,6 +30,18 @@ class CustomerRegistrationForm(forms.ModelForm):
             }),
         }
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("A user with this email already exists.")
+        return email
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("A user with this username already exists.")
+        return username
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
@@ -66,6 +78,18 @@ class CompanyRegistrationForm(forms.ModelForm):
                 'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200',
             }),
         }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("A user with this email already exists.")
+        return email
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("A user with this username already exists.")
+        return username
 
     def clean(self):
         cleaned_data = super().clean()
