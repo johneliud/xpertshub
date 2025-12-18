@@ -97,12 +97,26 @@ WSGI_APPLICATION = 'xpertshub.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 import dj_database_url
+import os
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f"postgresql://{env('DB_USER', default='xpertshub')}:{env('DB_PASSWORD', default='xpertshub')}@{env('DB_HOST', default='localhost')}:{env('DB_PORT', default='5432')}/{env('DB_NAME', default='xpertshub')}"
-    )
-}
+# Try DATABASE_URL first, fallback to individual variables
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('PGDATABASE', env('DB_NAME', default='xpertshub')),
+            'USER': os.environ.get('PGUSER', env('DB_USER', default='xpertshub')),
+            'PASSWORD': os.environ.get('PGPASSWORD', env('DB_PASSWORD', default='xpertshub')),
+            'HOST': os.environ.get('PGHOST', env('DB_HOST', default='localhost')),
+            'PORT': os.environ.get('PGPORT', env('DB_PORT', default='5432')),
+        }
+    }
 
 
 # Password validation
