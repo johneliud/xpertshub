@@ -215,17 +215,12 @@ if not DEBUG:
 
 # Email Configuration
 if not DEBUG:
-    # Production: Use SendGrid
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.sendgrid.net'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = 'apikey'
-    EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY', default='')
+    # Production: Use SendGrid Web API (faster than SMTP)
+    SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
     DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='noreply@xpertshub.com')
     SERVER_EMAIL = env('DEFAULT_FROM_EMAIL', default='noreply@xpertshub.com')
 else:
-    # Development: Use Gmail
+    # Development: Use Gmail SMTP
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
     EMAIL_PORT = env('EMAIL_PORT', default=587)
