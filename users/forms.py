@@ -6,10 +6,12 @@ class CustomerRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200',
         'placeholder': 'Enter password',
+        'id': 'id_password',
     }))
     password_confirmation = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200',
         'placeholder': 'Confirm password',
+        'id': 'id_password_confirmation',
     }))
 
     class Meta:
@@ -56,10 +58,12 @@ class CompanyRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200',
         'placeholder': 'Enter password',
+        'id': 'id_password',
     }))
     password_confirmation = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200',
         'placeholder': 'Confirm password',
+        'id': 'id_password_confirmation',
     }))
 
     class Meta:
@@ -110,4 +114,5 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200',
         'placeholder': 'Enter password',
+        'id': 'id_password',
     }))

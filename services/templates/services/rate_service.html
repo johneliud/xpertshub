@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Rate {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+      <a href="{% url 'service_detail' service.pk %}" class="text-blue-600 hover:text-blue-800 font-medium">
+        <i class='bx bx-arrow-back mr-1'></i>Back to Service
+      </a>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-8">
+      <h1 class="font-mono text-3xl font-bold text-gray-800 mb-6">Rate Service</h1>
+      
+      <div class="bg-gray-50 p-4 rounded-lg mb-6">
+        <h3 class="font-semibold text-lg text-gray-800 mb-2">{{ service.name }}</h3>
+        <p class="text-gray-600">{{ service.description }}</p>
+        <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mt-2">
+          {{ service.field }}
+        </span>
+      </div>
+
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <div>
+          <label for="{{ form.rating.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+            Rating *
+          </label>
+          {{ form.rating }}
+          {% if form.rating.errors %}
+            <div class="text-red-600 text-sm mt-1">{{ form.rating.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div>
+          <label for="{{ form.review.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+            Review
+          </label>
+          {{ form.review }}
+          {% if form.review.errors %}
+            <div class="text-red-600 text-sm mt-1">{{ form.review.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="flex space-x-4">
+          <button type="submit" class="bg-yellow-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-colors">
+            <i class='bx bx-star mr-2'></i>Submit Rating
+          </button>
+          <a href="{% url 'service_detail' service.pk %}" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-400 transition-colors">
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Service(models.Model):
     FIELD_OF_WORK_CHOICES = [
@@ -26,6 +27,7 @@ class Service(models.Model):
     description = models.TextField()
     field = models.CharField(max_length=50, choices=FIELD_OF_WORK_CHOICES)
     price_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
+    image = models.ImageField(upload_to='service_images/')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     date_created = models.DateTimeField(auto_now_add=True)
     date_approved = models.DateTimeField(null=True, blank=True)
@@ -46,6 +48,17 @@ class Service(models.Model):
     def __str__(self):
         return f"{self.name} - {self.get_status_display()}"
 
+    @property
+    def average_rating(self):
+        ratings = self.ratings.all()
+        if ratings:
+            return sum(r.rating for r in ratings) / len(ratings)
+        return 0
+
+    @property
+    def rating_count(self):
+        return self.ratings.count()
+
 class ServiceRequest(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='requests')
     customer = models.ForeignKey(
@@ -64,3 +77,21 @@ class ServiceRequest(models.Model):
 
     def __str__(self):
         return f"Request for {self.service.name} by {self.customer.username}"
+
+class Rating(models.Model):
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='ratings')
+    customer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='ratings_given',
+        limit_choices_to={'user_type': 'customer'}
+    )
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    review = models.TextField(blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('service', 'customer')
+
+    def __str__(self):
+        return f"{self.customer.username} rated {self.service.name}: {self.rating}/5"

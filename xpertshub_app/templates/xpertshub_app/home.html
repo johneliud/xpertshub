@@ -14,12 +14,30 @@
         Connect with trusted professionals for all your home and business needs. From plumbing to painting, we've got you covered.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in">
-        <a href="{% url 'customer_register' %}" class="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:from-yellow-300 hover:to-orange-300 transition-all duration-300 hover:scale-105 shadow-2xl">
-          <i class='bx bx-user-plus mr-2'></i>Find Services
-        </a>
-        <a href="{% url 'company_register' %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-purple-900 transition-all duration-300 hover:scale-105 shadow-2xl">
-          <i class='bx bx-briefcase mr-2'></i>Offer Services
-        </a>
+        {% if user.is_authenticated %}
+          {% if user.user_type == 'customer' %}
+            <a href="{% url 'all_services' %}" class="bg-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
+              <i class='bx bx-search mr-2'></i>Browse Services
+            </a>
+            <a href="{% url 'profile' user.username %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 shadow-2xl">
+              <i class='bx bx-user mr-2'></i>My Profile
+            </a>
+          {% else %}
+            <a href="{% url 'create_service' %}" class="bg-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
+              <i class='bx bx-plus mr-2'></i>Create Service
+            </a>
+            <a href="{% url 'profile' user.username %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 shadow-2xl">
+              <i class='bx bx-briefcase mr-2'></i>My Services
+            </a>
+          {% endif %}
+        {% else %}
+          <a href="{% url 'customer_register' %}" class="bg-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
+            <i class='bx bx-user-plus mr-2'></i>Find Services
+          </a>
+          <a href="{% url 'company_register' %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 shadow-2xl">
+            <i class='bx bx-briefcase mr-2'></i>Offer Services
+          </a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -213,6 +231,21 @@
           </h3>
           <p class="text-gray-600 text-sm mb-6">{{ service.description|truncatewords:15 }}</p>
           
+          {% if service.rating_count > 0 %}
+          <div class="flex items-center space-x-2 mb-3">
+            <div class="flex text-yellow-400">
+              {% for i in "12345" %}
+                {% if service.average_rating >= i|add:0 %}
+                  <i class='bx bxs-star text-sm'></i>
+                {% else %}
+                  <i class='bx bx-star text-sm'></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <span class="text-gray-600 text-sm">({{ service.rating_count }})</span>
+          </div>
+          {% endif %}
+
           <div class="flex items-center justify-between">
             <span class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">KES {{ service.price_per_hour }}/hr</span>
             <a href="{% url 'service_detail' service.id %}" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-blue-600 transition-all duration-300 hover:scale-105">
@@ -266,12 +299,30 @@
       <h2 class="font-mono text-5xl font-bold mb-6">Ready to Get Started?</h2>
       <p class="text-xl mb-10 opacity-90 max-w-2xl mx-auto">Join thousands of satisfied customers and service providers</p>
       <div class="flex flex-col sm:flex-row gap-6 justify-center">
-        <a href="{% url 'customer_register' %}" class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-2xl">
-          <i class='bx bx-user-plus mr-2'></i>Sign Up as Customer
-        </a>
-        <a href="{% url 'company_register' %}" class="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-10 py-4 rounded-xl font-semibold text-lg hover:from-yellow-500 hover:to-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
-          <i class='bx bx-briefcase mr-2'></i>Join as Provider
-        </a>
+        {% if user.is_authenticated %}
+          {% if user.user_type == 'customer' %}
+            <a href="{% url 'all_services' %}" class="bg-blue-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 shadow-2xl">
+              <i class='bx bx-search mr-2'></i>Explore All Services
+            </a>
+            <a href="{% url 'profile' user.username %}" class="bg-orange-400 text-gray-900 px-10 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
+              <i class='bx bx-user mr-2'></i>View My Requests
+            </a>
+          {% else %}
+            <a href="{% url 'create_service' %}" class="bg-blue-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 shadow-2xl">
+              <i class='bx bx-plus mr-2'></i>Add New Service
+            </a>
+            <a href="{% url 'service_requests' %}" class="bg-orange-400 text-gray-900 px-10 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
+              <i class='bx bx-list-ul mr-2'></i>View Requests
+            </a>
+          {% endif %}
+        {% else %}
+          <a href="{% url 'customer_register' %}" class="bg-blue-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 shadow-2xl">
+            <i class='bx bx-user-plus mr-2'></i>Sign Up as Customer
+          </a>
+          <a href="{% url 'company_register' %}" class="bg-orange-400 text-gray-900 px-10 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
+            <i class='bx bx-briefcase mr-2'></i>Join as Provider
+          </a>
+        {% endif %}
       </div>
     </div>
   </div>

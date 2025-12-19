@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from .models import Service, ServiceRequest
+from .models import Service, ServiceRequest, Rating
 from users.models import User
 
 class ServiceCreationTests(TestCase):
@@ -294,3 +294,286 @@ class ServiceRequestModelTests(TestCase):
         )
         expected_cost = self.service.price_per_hour * 3
         self.assertEqual(request.calculated_cost, expected_cost)
+
+class RatingSystemTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.customer = User.objects.create_user(
+            username='customer',
+            email='customer@test.com',
+            password='testpass123',
+            user_type='customer'
+        )
+        self.company = User.objects.create_user(
+            username='company',
+            email='company@test.com',
+            password='testpass123',
+            user_type='company',
+            field_of_work='Plumbing'
+        )
+        self.service = Service.objects.create(
+            name='Test Service',
+            description='Test service',
+            field='Plumbing',
+            price_per_hour=50.00,
+            company=self.company,
+            status='approved'
+        )
+
+    def test_customer_can_rate_service(self):
+        """Test customer can rate a service"""
+        self.client.login(username='customer@test.com', password='testpass123')
+        response = self.client.post(reverse('rate_service', kwargs={'service_id': self.service.pk}), {
+            'rating': 5,
+            'review': 'Excellent service!'
+        })
+        self.assertEqual(response.status_code, 302)  # Redirect after success
+        self.assertTrue(Rating.objects.filter(
+            service=self.service,
+            customer=self.customer,
+            rating=5
+        ).exists())
+
+    def test_customer_cannot_rate_same_service_twice(self):
+        """Test customer cannot rate the same service twice"""
+        Rating.objects.create(
+            service=self.service,
+            customer=self.customer,
+            rating=4,
+            review='Good service'
+        )
+        
+        self.client.login(username='customer@test.com', password='testpass123')
+        response = self.client.get(reverse('rate_service', kwargs={'service_id': self.service.pk}))
+        self.assertEqual(response.status_code, 302)  # Redirected away
+
+    def test_company_cannot_rate_service(self):
+        """Test company cannot rate services"""
+        self.client.login(username='company@test.com', password='testpass123')
+        response = self.client.get(reverse('rate_service', kwargs={'service_id': self.service.pk}))
+        self.assertEqual(response.status_code, 302)  # Redirected away
+
+    def test_anonymous_user_cannot_rate_service(self):
+        """Test anonymous user cannot rate service"""
+        response = self.client.get(reverse('rate_service', kwargs={'service_id': self.service.pk}))
+        self.assertEqual(response.status_code, 302)  # Redirected to login
+
+    def test_service_average_rating_calculation(self):
+        """Test service average rating is calculated correctly"""
+        Rating.objects.create(service=self.service, customer=self.customer, rating=5)
+        
+        customer2 = User.objects.create_user(
+            username='customer2',
+            email='customer2@test.com',
+            password='testpass123',
+            user_type='customer'
+        )
+        Rating.objects.create(service=self.service, customer=customer2, rating=3)
+        
+        self.assertEqual(self.service.average_rating, 4.0)  # (5+3)/2 = 4.0
+        self.assertEqual(self.service.rating_count, 2)
+
+    def test_service_detail_shows_ratings(self):
+        """Test service detail page shows ratings"""
+        Rating.objects.create(
+            service=self.service,
+            customer=self.customer,
+            rating=5,
+            review='Great service!'
+        )
+        
+        response = self.client.get(reverse('service_detail', kwargs={'pk': self.service.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Great service!')
+        self.assertContains(response, 'customer')  # Customer username
+
+    def test_rating_model_string_representation(self):
+        """Test rating model string representation"""
+        rating = Rating.objects.create(
+            service=self.service,
+            customer=self.customer,
+            rating=4,
+            review='Good service'
+        )
+        expected_str = f"{self.customer.username} rated {self.service.name}: 4/5"
+        self.assertEqual(str(rating), expected_str)
+
+class PaginationTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.company = User.objects.create_user(
+            username='company',
+            email='company@test.com',
+            password='testpass123',
+            user_type='company',
+            field_of_work='Plumbing'
+        )
+        
+        # Create 10 services to test pagination (paginate_by = 6)
+        self.services = []
+        for i in range(10):
+            service = Service.objects.create(
+                name=f'Test Service {i+1}',
+                description=f'Test service {i+1}',
+                field='Plumbing',
+                price_per_hour=50.00 + i,
+                company=self.company,
+                status='approved'
+            )
+            self.services.append(service)
+
+    def test_all_services_pagination(self):
+        """Test pagination on all services page"""
+        response = self.client.get(reverse('all_services'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['is_paginated'])
+        self.assertEqual(len(response.context['services']), 6)  # First page should have 6 services
+        
+        # Test second page
+        response = self.client.get(reverse('all_services') + '?page=2')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['services']), 4)  # Second page should have 4 services
+
+    def test_category_services_pagination(self):
+        """Test pagination on category services page"""
+        response = self.client.get(reverse('services_by_category', kwargs={'field': 'Plumbing'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['is_paginated'])
+        self.assertEqual(len(response.context['services']), 6)  # First page should have 6 services
+
+    def test_pagination_invalid_page(self):
+        """Test pagination with invalid page number"""
+        response = self.client.get(reverse('all_services') + '?page=999')
+        self.assertEqual(response.status_code, 404)  # Should return 404 for invalid page
+
+    def test_pagination_page_one_redirect(self):
+        """Test pagination page 1 behavior"""
+        response = self.client.get(reverse('all_services') + '?page=1')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page_obj'].number, 1)
+
+class SearchFunctionalityTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.company = User.objects.create_user(
+            username='test_company',
+            email='company@test.com',
+            password='testpass123',
+            user_type='company',
+            field_of_work='Plumbing'
+        )
+        
+        self.service1 = Service.objects.create(
+            name='Emergency Plumbing',
+            description='24/7 emergency plumbing service',
+            field='Plumbing',
+            price_per_hour=75.00,
+            company=self.company,
+            status='approved'
+        )
+        
+        self.service2 = Service.objects.create(
+            name='Regular Maintenance',
+            description='Regular plumbing maintenance',
+            field='Plumbing',
+            price_per_hour=50.00,
+            company=self.company,
+            status='approved'
+        )
+
+    def test_search_by_name(self):
+        """Test search functionality by service name"""
+        response = self.client.get(reverse('all_services') + '?search=Emergency')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Emergency Plumbing')
+        self.assertNotContains(response, 'Regular Maintenance')
+
+    def test_search_by_description(self):
+        """Test search functionality by description"""
+        response = self.client.get(reverse('all_services') + '?search=24/7')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Emergency Plumbing')
+
+    def test_filter_by_category(self):
+        """Test filtering by category"""
+        response = self.client.get(reverse('all_services') + '?category=Plumbing')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Emergency Plumbing')
+        self.assertContains(response, 'Regular Maintenance')
+
+    def test_filter_by_price_range(self):
+        """Test filtering by price range"""
+        response = self.client.get(reverse('all_services') + '?min_price=60&max_price=80')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Emergency Plumbing')
+        self.assertNotContains(response, 'Regular Maintenance')
+
+    def test_sort_by_price_low_to_high(self):
+        """Test sorting by price low to high"""
+        response = self.client.get(reverse('all_services') + '?sort=price_low')
+        self.assertEqual(response.status_code, 200)
+        services = response.context['services']
+        self.assertEqual(services[0].name, 'Regular Maintenance')  # Lower price first
+
+    def test_sort_by_price_high_to_low(self):
+        """Test sorting by price high to low"""
+        response = self.client.get(reverse('all_services') + '?sort=price_high')
+        self.assertEqual(response.status_code, 200)
+        services = response.context['services']
+        self.assertEqual(services[0].name, 'Emergency Plumbing')  # Higher price first
+
+class ImageUploadTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.company = User.objects.create_user(
+            username='company',
+            email='company@test.com',
+            password='testpass123',
+            user_type='company',
+            field_of_work='Plumbing'
+        )
+
+    def test_service_creation_with_image(self):
+        """Test service creation with image upload"""
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from PIL import Image
+        import io
+        
+        # Create a proper test image
+        image = Image.new('RGB', (100, 100), color='red')
+        image_file = io.BytesIO()
+        image.save(image_file, 'JPEG')
+        image_file.seek(0)
+        
+        uploaded_file = SimpleUploadedFile(
+            name='test_image.jpg',
+            content=image_file.read(),
+            content_type='image/jpeg'
+        )
+        
+        self.client.login(username='company@test.com', password='testpass123')
+        response = self.client.post(reverse('create_service'), {
+            'name': 'Test Service with Image',
+            'description': 'Service with image',
+            'field': 'Plumbing',
+            'price_per_hour': '50.00',
+            'image': uploaded_file
+        })
+        
+        self.assertEqual(response.status_code, 302)  # Redirect after success
+        service = Service.objects.get(name='Test Service with Image')
+        self.assertTrue(service.image)
+
+    def test_service_creation_without_image(self):
+        """Test service creation without image (optional field)"""
+        self.client.login(username='company@test.com', password='testpass123')
+        response = self.client.post(reverse('create_service'), {
+            'name': 'Test Service No Image',
+            'description': 'Service without image',
+            'field': 'Plumbing',
+            'price_per_hour': '50.00'
+        })
+        
+        self.assertEqual(response.status_code, 302)  # Redirect after success
+        service = Service.objects.get(name='Test Service No Image')
+        self.assertFalse(service.image)

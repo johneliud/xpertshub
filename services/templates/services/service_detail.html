@@ -13,6 +13,12 @@
   <div class="grid lg:grid-cols-3 gap-8">
     <!-- Service Details -->
     <div class="lg:col-span-2">
+      {% if service.image %}
+      <div class="mb-6">
+        <img src="{{ service.image.url }}" alt="{{ service.name }}" class="w-full h-64 object-cover rounded-lg shadow-md">
+      </div>
+      {% endif %}
+      
       <div class="bg-white rounded-lg shadow-md p-8">
         <div class="flex items-start justify-between mb-6">
           <div>
@@ -47,11 +53,66 @@
         <div class="bg-blue-50 border border-blue-200 p-6 rounded-lg">
           <h3 class="font-semibold text-lg text-gray-800 mb-3">Interested in this service?</h3>
           <p class="text-gray-600 mb-4">Contact the service provider to discuss your requirements and schedule.</p>
-          <a href="{% url 'request_service' service.id %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block">
-            <i class='bx bx-message mr-2'></i>Request Service
-          </a>
+          <div class="flex space-x-3">
+            <a href="{% url 'request_service' service.id %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block">
+              <i class='bx bx-message mr-2'></i>Request Service
+            </a>
+            {% if not user_has_rated %}
+            <a href="{% url 'rate_service' service.id %}" class="bg-yellow-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-colors inline-block">
+              <i class='bx bx-star mr-2'></i>Rate Service
+            </a>
+            {% endif %}
+          </div>
         </div>
         {% endif %}
+
+        <!-- Ratings Section -->
+        <div class="bg-white border border-gray-200 p-6 rounded-lg mt-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-lg text-gray-800">Ratings & Reviews</h3>
+            <div class="flex items-center space-x-2">
+              <div class="flex text-yellow-400">
+                {% for i in "12345" %}
+                  {% if service.average_rating >= i|add:0 %}
+                    <i class='bx bxs-star'></i>
+                  {% else %}
+                    <i class='bx bx-star'></i>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <span class="text-gray-600">({{ service.rating_count }} review{{ service.rating_count|pluralize }})</span>
+            </div>
+          </div>
+
+          {% if ratings %}
+            <div class="space-y-4">
+              {% for rating in ratings %}
+              <div class="border-b border-gray-100 pb-4 last:border-b-0">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center space-x-2">
+                    <span class="font-medium text-gray-800">{{ rating.customer.username }}</span>
+                    <div class="flex text-yellow-400">
+                      {% for i in "12345" %}
+                        {% if rating.rating >= i|add:0 %}
+                          <i class='bx bxs-star text-sm'></i>
+                        {% else %}
+                          <i class='bx bx-star text-sm'></i>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <span class="text-sm text-gray-500">{{ rating.date_created|date:"M d, Y" }}</span>
+                </div>
+                {% if rating.review %}
+                <p class="text-gray-600">{{ rating.review }}</p>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-gray-500 text-center py-4">No ratings yet. Be the first to rate this service!</p>
+          {% endif %}
+        </div>
       </div>
     </div>
 

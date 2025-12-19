@@ -28,12 +28,24 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY').strip('"')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', default='localhost,127.0.0.1').strip('"').split(',')
+
+# CSRF settings for production
+CSRF_TRUSTED_ORIGINS = [
+    'https://xpertshub-production.up.railway.app',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+
+# Add ALLOWED_HOSTS to CSRF_TRUSTED_ORIGINS for HTTPS
+for host in ALLOWED_HOSTS:
+    if host not in ['localhost', '127.0.0.1']:
+        CSRF_TRUSTED_ORIGINS.append(f'https://{host}')
 
 # Application definition
 
@@ -65,6 +77,7 @@ TAILWIND_APP_NAME = 'theme'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -96,16 +109,27 @@ WSGI_APPLICATION = 'xpertshub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
+import dj_database_url
+import os
+
+# Try DATABASE_URL first, fallback to individual variables
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('PGDATABASE', env('DB_NAME', default='xpertshub')),
+            'USER': os.environ.get('PGUSER', env('DB_USER', default='xpertshub')),
+            'PASSWORD': os.environ.get('PGPASSWORD', env('DB_PASSWORD', default='xpertshub')),
+            'HOST': os.environ.get('PGHOST', env('DB_HOST', default='localhost')),
+            'PORT': os.environ.get('PGPORT', env('DB_PORT', default='5432')),
+        }
+    }
 
 
 # Password validation
@@ -142,10 +166,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Ensure staticfiles directory exists
+import os
+os.makedirs(STATIC_ROOT, exist_ok=True)
+
+# WhiteNoise configuration
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
