@@ -1,21 +1,25 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const togglePasswordButtons = document.querySelectorAll('.toggle-password');
-
-    togglePasswordButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Find the password input in the same parent container
-            const container = this.parentElement;
-            const passwordInput = container.querySelector('input[type="password"], input[type="text"]');
+    // Get all toggle buttons
+    const toggleButtons = document.querySelectorAll('.toggle-password');
+    
+    toggleButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
             
-            if (passwordInput) {
-                const icon = this.querySelector('i');
-                
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    icon.className = 'bx bx-eye-slash text-xl';
+            // Find the input field in the same container
+            const container = this.parentElement;
+            const input = container.querySelector('input');
+            const icon = this.querySelector('i');
+            
+            if (input && icon) {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('bx-eye');
+                    icon.classList.add('bx-eye-slash');
                 } else {
-                    passwordInput.type = 'password';
-                    icon.className = 'bx bx-eye text-xl';
+                    input.type = 'password';
+                    icon.classList.remove('bx-eye-slash');
+                    icon.classList.add('bx-eye');
                 }
             }
         });
