@@ -1,4 +1,5 @@
 {% extends "xpertshub_app/base.html" %}
+{% load service_tags %}
 
 {% block title %}{{ service.name }} - Service Details{% endblock %}
 
@@ -70,18 +71,7 @@
         <div class="bg-white border border-gray-200 p-6 rounded-lg mt-6">
           <div class="flex items-center justify-between mb-4">
             <h3 class="font-semibold text-lg text-gray-800">Ratings & Reviews</h3>
-            <div class="flex items-center space-x-2">
-              <div class="flex text-yellow-400">
-                {% for i in "12345" %}
-                  {% if service.average_rating >= i|add:0 %}
-                    <i class='bx bxs-star'></i>
-                  {% else %}
-                    <i class='bx bx-star'></i>
-                  {% endif %}
-                {% endfor %}
-              </div>
-              <span class="text-gray-600">({{ service.rating_count }} review{{ service.rating_count|pluralize }})</span>
-            </div>
+            {% include 'xpertshub_app/components/rating_display.html' with average_rating=service.average_rating rating_count=service.rating_count star_size="text-base" text_size="text-base" %}
           </div>
 
           {% if ratings %}
@@ -91,15 +81,7 @@
                 <div class="flex items-center justify-between mb-2">
                   <div class="flex items-center space-x-2">
                     <span class="font-medium text-gray-800">{{ rating.customer.username }}</span>
-                    <div class="flex text-yellow-400">
-                      {% for i in "12345" %}
-                        {% if rating.rating >= i|add:0 %}
-                          <i class='bx bxs-star text-sm'></i>
-                        {% else %}
-                          <i class='bx bx-star text-sm'></i>
-                        {% endif %}
-                      {% endfor %}
-                    </div>
+                    {% include 'xpertshub_app/components/rating_display.html' with average_rating=rating.rating rating_count=1 star_size="text-sm" text_size="text-sm" rating_text="" %}
                   </div>
                   <span class="text-sm text-gray-500">{{ rating.date_created|date:"M d, Y" }}</span>
                 </div>
