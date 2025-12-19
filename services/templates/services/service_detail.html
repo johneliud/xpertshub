@@ -13,6 +13,12 @@
   <div class="grid lg:grid-cols-3 gap-8">
     <!-- Service Details -->
     <div class="lg:col-span-2">
+      {% if service.image %}
+      <div class="mb-6">
+        <img src="{{ service.image.url }}" alt="{{ service.name }}" class="w-full h-64 object-cover rounded-lg shadow-md">
+      </div>
+      {% endif %}
+      
       <div class="bg-white rounded-lg shadow-md p-8">
         <div class="flex items-start justify-between mb-6">
           <div>
