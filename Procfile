@@ -1,1 +1,2 @@
-web: python manage.py tailwind build && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn xpertshub.wsgi:application --bind 0.0.0.0:${PORT:-8000}
+release: python manage.py migrate && python manage.py create_admin
+web: python manage.py tailwind build && python manage.py collectstatic --noinput && gunicorn xpertshub.wsgi:application --bind 0.0.0.0:${PORT:-8000}
