@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Hide the default file input
     fileInput.style.display = 'none';
+    fileInput.required = true;
 
     // Click to upload
     uploadArea.addEventListener('click', function(e) {
@@ -81,6 +82,9 @@ document.addEventListener('DOMContentLoaded', function() {
             fileName.textContent = file.name;
             uploadPlaceholder.classList.add('hidden');
             imagePreview.classList.remove('hidden');
+            
+            // Remove error styling if present
+            uploadArea.classList.remove('border-red-400');
         };
         reader.readAsDataURL(file);
     }
@@ -91,5 +95,18 @@ document.addEventListener('DOMContentLoaded', function() {
         fileName.textContent = '';
         uploadPlaceholder.classList.remove('hidden');
         imagePreview.classList.add('hidden');
+    }
+
+    // Form validation
+    const form = fileInput.closest('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            if (!fileInput.files.length) {
+                e.preventDefault();
+                uploadArea.classList.add('border-red-400');
+                uploadArea.scrollIntoView({ behavior: 'smooth' });
+                alert('Please upload a service image');
+            }
+        });
     }
 });
