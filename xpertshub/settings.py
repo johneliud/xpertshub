@@ -190,18 +190,17 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME', default=''),
-    'API_KEY': env('CLOUDINARY_API_KEY', default=''),
-    'API_SECRET': env('CLOUDINARY_API_SECRET', default=''),
-}
-
-cloudinary.config(
-    cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
-    api_key=CLOUDINARY_STORAGE['API_KEY'],
-    api_secret=CLOUDINARY_STORAGE['API_SECRET'],
-    secure=True
-)
+# Configure using CLOUDINARY_URL or individual credentials
+CLOUDINARY_URL = env('CLOUDINARY_URL', default='')
+if CLOUDINARY_URL:
+    cloudinary.config(cloudinary_url=CLOUDINARY_URL)
+else:
+    cloudinary.config(
+        cloud_name=env('CLOUDINARY_CLOUD_NAME', default=''),
+        api_key=env('CLOUDINARY_API_KEY', default=''),
+        api_secret=env('CLOUDINARY_API_SECRET', default=''),
+        secure=True
+    )
 
 # Use Cloudinary in production, local storage in development
 if not DEBUG:
@@ -213,8 +212,6 @@ if not DEBUG:
             "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
-    # Override MEDIA_URL to use Cloudinary
-    MEDIA_URL = f'https://res.cloudinary.com/{CLOUDINARY_STORAGE["CLOUD_NAME"]}/'
 
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
