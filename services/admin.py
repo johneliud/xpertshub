@@ -6,14 +6,17 @@ from .models import Service, ServiceRequest, Rating
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ['name', 'company', 'field', 'price_per_hour', 'status', 'date_created']
+    list_display = ['name', 'company', 'field', 'price_per_hour', 'status', 'image_preview', 'date_created']
     list_filter = ['status', 'field', 'date_created']
     search_fields = ['name', 'company__username', 'company__email']
-    readonly_fields = ['date_created', 'date_approved', 'approved_by']
+    readonly_fields = ['date_created', 'date_approved', 'approved_by', 'image_preview']
     
     fieldsets = (
         ('Service Information', {
             'fields': ('name', 'description', 'field', 'price_per_hour', 'company')
+        }),
+        ('Service Image', {
+            'fields': ('image', 'image_preview')
         }),
         ('Approval Status', {
             'fields': ('status', 'approved_by', 'date_approved')
@@ -23,6 +26,13 @@ class ServiceAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+    def image_preview(self, obj):
+        if obj.image:
+            return f'<img src="{obj.image.url}" style="max-width: 200px; max-height: 200px; border-radius: 8px;">'
+        return "No image"
+    image_preview.allow_tags = True
+    image_preview.short_description = "Image Preview"
 
     def save_model(self, request, obj, form, change):
         # Auto-set approval fields when status changes to approved
