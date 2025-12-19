@@ -8,6 +8,7 @@ from django.views.generic import CreateView, ListView, DetailView
 from django.db.models import Count, Avg, Q
 from .forms import ServiceCreationForm, ServiceRequestForm, RatingForm
 from .models import Service, ServiceRequest, Rating
+from .emails import send_request_confirmation_email, send_new_request_notification_email
 
 class CreateServiceView(LoginRequiredMixin, CreateView):
     model = Service
@@ -158,8 +159,14 @@ class RequestServiceView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.service = self.service
         form.instance.customer = self.request.user
+        response = super().form_valid(form)
+        
+        # Send email notifications
+        send_request_confirmation_email(self.object)
+        send_new_request_notification_email(self.object)
+        
         messages.success(self.request, f'Service request for "{self.service.name}" submitted successfully!')
-        return super().form_valid(form)
+        return response
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'username': self.request.user.username})
