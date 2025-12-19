@@ -23,7 +23,7 @@
       @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
       .bounce-in { animation: bounceIn 1s ease-out; }
       @keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.05); } 70% { transform: scale(0.9); } 100% { transform: scale(1); opacity: 1; } }
-      .dropdown:hover .dropdown-menu { display: block; }
+      .dropdown-menu { transition: all 0.2s ease-in-out; }
       .notification-pulse { animation: pulse 2s infinite; }
       @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
     </style>
@@ -50,28 +50,28 @@
             </a>
             
             <!-- Services Dropdown -->
-            <div class="relative dropdown">
-              <button class="text-gray-700 hover:text-purple-600 font-medium transition-all duration-300 hover:scale-105 flex items-center">
+            <div class="relative dropdown" id="servicesDropdown">
+              <button class="text-gray-700 hover:text-purple-600 font-medium transition-all duration-300 hover:scale-105 flex items-center" onclick="toggleDropdown()">
                 Services
-                <i class="bx bx-chevron-down ml-1"></i>
+                <i class="bx bx-chevron-down ml-1 transition-transform duration-200" id="dropdownIcon"></i>
               </button>
-              <div class="dropdown-menu absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 hidden">
-                <div class="p-4">
-                  <a href="{% url 'all_services' %}" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    All Services
+              <div class="dropdown-menu absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 hidden z-50" id="dropdownMenu">
+                <div class="p-2">
+                  <a href="{% url 'all_services' %}" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="bx bx-grid-alt mr-2"></i>All Services
                   </a>
                   <hr class="my-2">
-                  <a href="{% url 'services_by_category' 'Plumbing' %}" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    Plumbing
+                  <a href="{% url 'services_by_category' 'Plumbing' %}" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="bx bx-wrench mr-2"></i>Plumbing
                   </a>
-                  <a href="{% url 'services_by_category' 'Electricity' %}" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    Electrical
+                  <a href="{% url 'services_by_category' 'Electricity' %}" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="bx bx-bolt mr-2"></i>Electrical
                   </a>
-                  <a href="{% url 'services_by_category' 'Painting' %}" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    Painting
+                  <a href="{% url 'services_by_category' 'Painting' %}" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="bx bx-paint mr-2"></i>Painting
                   </a>
-                  <a href="{% url 'services_by_category' 'Housekeeping' %}" class="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    Housekeeping
+                  <a href="{% url 'services_by_category' 'Housekeeping' %}" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="bx bx-home mr-2"></i>Housekeeping
                   </a>
                 </div>
               </div>
@@ -104,10 +104,10 @@
             {% endif %}
             
             <a href="{% url 'profile' user.username %}" class="text-gray-700 hover:text-purple-600 font-medium transition-all duration-300 hover:scale-105">
-              <i class="bx bx-user mr-1"></i>Profile
+              <i class="bx bx-user mr-1"></i>
             </a>
             
-            <span class="text-gray-600 text-sm">{{ user.username }}</span>
+            <!--<span class="text-gray-600 text-sm">{{ user.username }}</span>-->
             
             <a href="{% url 'logout' %}" class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-300 hover:scale-105 shadow-lg">
               <i class="bx bx-log-out mr-1"></i>Logout
@@ -198,5 +198,6 @@
     </footer>
 
     <script src="{% static 'js/password_toggle.js' %}"></script>
+    <script src="{% static 'js/dropdown.js' %}"></script>
   </body>
 </html>
