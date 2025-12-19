@@ -96,20 +96,9 @@
           <span class="text-gray-500 text-sm">per hour</span>
         </div>
 
-        {% if service.rating_count > 0 %}
-        <div class="flex items-center space-x-2 mb-3">
-          <div class="flex text-yellow-400">
-            {% for i in "12345" %}
-              {% if service.average_rating >= i|add:0 %}
-                <i class='bx bxs-star text-sm'></i>
-              {% else %}
-                <i class='bx bx-star text-sm'></i>
-              {% endif %}
-            {% endfor %}
-          </div>
-          <span class="text-gray-600 text-sm">({{ service.rating_count }})</span>
+        <div class="mb-3">
+          {% include 'xpertshub_app/components/rating_display.html' with average_rating=service.average_rating rating_count=service.rating_count star_size="text-sm" text_size="text-sm" %}
         </div>
-        {% endif %}
         
         <div class="flex items-center justify-between">
           <div class="flex items-center text-sm text-gray-500">
