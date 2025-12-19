@@ -3,13 +3,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     togglePasswordButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const passwordInput = this.previousElementSibling;
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                this.innerHTML = "<i class='bx bx-eye-slash'></i>";
-            } else {
-                passwordInput.type = 'password';
-                this.innerHTML = "<i class='bx bx-eye'></i>";
+            // Find the password input in the same parent container
+            const container = this.parentElement;
+            const passwordInput = container.querySelector('input[type="password"], input[type="text"]');
+            
+            if (passwordInput) {
+                const icon = this.querySelector('i');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.className = 'bx bx-eye-slash text-xl';
+                } else {
+                    passwordInput.type = 'password';
+                    icon.className = 'bx bx-eye text-xl';
+                }
             }
         });
     });
