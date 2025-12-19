@@ -32,7 +32,7 @@ def send_request_confirmation_email(service_request):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[customer.email],
             html_message=html_message,
-            fail_silently=False,
+            fail_silently=True,  # Don't crash if email fails
         )
         
         logger.info(f"Confirmation email sent to {customer.email} for request {service_request.id}")
@@ -69,7 +69,7 @@ def send_new_request_notification_email(service_request):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[company.email],
             html_message=html_message,
-            fail_silently=False,
+            fail_silently=True,  # Don't crash if email fails
         )
         
         logger.info(f"Notification email sent to {company.email} for request {service_request.id}")
