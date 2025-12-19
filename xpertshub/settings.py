@@ -35,6 +35,18 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
+# CSRF settings for production
+CSRF_TRUSTED_ORIGINS = [
+    'https://xpertshub-production.up.railway.app',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+
+# Add ALLOWED_HOSTS to CSRF_TRUSTED_ORIGINS for HTTPS
+for host in ALLOWED_HOSTS:
+    if host not in ['localhost', '127.0.0.1']:
+        CSRF_TRUSTED_ORIGINS.append(f'https://{host}')
+
 # Application definition
 
 INSTALLED_APPS = [
