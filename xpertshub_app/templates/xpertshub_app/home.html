@@ -1,43 +1,63 @@
 {% extends "xpertshub_app/base.html" %}
+{% load static %}
+
+{% block extra_js %}
+<script src="{% static 'js/slideshow.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
 <section class="relative bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-800 text-white py-24 overflow-hidden">
   <div class="absolute inset-0 bg-black/20"></div>
-  <div class="container mx-auto px-6 text-center relative z-10">
-    <div class="bounce-in">
-      <h1 class="font-mono text-6xl md:text-7xl font-bold mb-6 leading-tight">
-        Conveniently Find 
-        <span class="text-yellow-300">Expert Services</span>
-      </h1>
-      <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90 slide-in">
-        Connect with trusted professionals for all your home and business needs. From plumbing to painting, we've got you covered.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in">
-        {% if user.is_authenticated %}
-          {% if user.user_type == 'customer' %}
-            <a href="{% url 'all_services' %}" class="bg-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
-              <i class='bx bx-search mr-2'></i>Browse Services
-            </a>
-            <a href="{% url 'profile' user.username %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 shadow-2xl">
-              <i class='bx bx-user mr-2'></i>My Profile
-            </a>
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <!-- Left Content -->
+      <div class="text-center lg:text-left bounce-in">
+        <h1 class="font-mono text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          Conveniently Find 
+          <span class="text-yellow-300">Expert Services</span>
+        </h1>
+        <p class="text-xl mb-8 opacity-90 slide-in">
+          Connect with trusted professionals for all your home and business needs. From plumbing to painting, we've got you covered.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start fade-in">
+          {% if user.is_authenticated %}
+            {% if user.user_type == 'customer' %}
+              <a href="{% url 'all_services' %}" class="bg-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
+                <i class='bx bx-search mr-2'></i>Browse Services
+              </a>
+              <a href="{% url 'profile' user.username %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 shadow-2xl">
+                <i class='bx bx-user mr-2'></i>My Profile
+              </a>
+            {% else %}
+              <a href="{% url 'create_service' %}" class="bg-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
+                <i class='bx bx-plus mr-2'></i>Create Service
+              </a>
+              <a href="{% url 'profile' user.username %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 shadow-2xl">
+                <i class='bx bx-briefcase mr-2'></i>My Services
+              </a>
+            {% endif %}
           {% else %}
-            <a href="{% url 'create_service' %}" class="bg-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
-              <i class='bx bx-plus mr-2'></i>Create Service
+            <a href="{% url 'customer_register' %}" class="bg-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
+              <i class='bx bx-user-plus mr-2'></i>Find Services
             </a>
-            <a href="{% url 'profile' user.username %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 shadow-2xl">
-              <i class='bx bx-briefcase mr-2'></i>My Services
+            <a href="{% url 'company_register' %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 shadow-2xl">
+              <i class='bx bx-briefcase mr-2'></i>Offer Services
             </a>
           {% endif %}
-        {% else %}
-          <a href="{% url 'customer_register' %}" class="bg-orange-400 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-orange-500 transition-all duration-300 hover:scale-105 shadow-2xl">
-            <i class='bx bx-user-plus mr-2'></i>Find Services
-          </a>
-          <a href="{% url 'company_register' %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 shadow-2xl">
-            <i class='bx bx-briefcase mr-2'></i>Offer Services
-          </a>
-        {% endif %}
+        </div>
+      </div>
+
+      <!-- Right Slideshow -->
+      <div class="hidden lg:block fade-in">
+        <div class="relative w-full h-96 rounded-2xl overflow-hidden shadow-2xl">
+          <div id="slideshow-container" class="relative w-full h-full">
+            <!-- Slides will be populated by JavaScript -->
+          </div>
+          <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2" id="slideshow-dots">
+            <!-- Dots will be populated by JavaScript -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
