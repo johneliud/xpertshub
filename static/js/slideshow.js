@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
   const categories = [
-    { name: 'Plumbing', image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&h=400&fit=crop' },
-    { name: 'Painting', image: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=600&h=400&fit=crop' },
-    { name: 'Housekeeping', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop' },
-    { name: 'Electricity', image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=400&fit=crop' },
-    { name: 'Air Conditioner', image: 'https://images.unsplash.com/photo-1631545806609-c2b999c8f4c6?w=600&h=400&fit=crop' },
-    { name: 'Carpentry', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&h=400&fit=crop' },
-    { name: 'Gardening', image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop' },
-    { name: 'Interior Design', image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop' }
+    { name: 'Plumbing', image: 'static/images/slideshow/plumbing.jpg' },
+    { name: 'Painting', image: 'static/images/slideshow/painting.jpg' },
+    { name: 'Housekeeping', image: 'static/images/slideshow/housekeeping.jpg' },
+    { name: 'Electricity', image: 'static/images/slideshow/electricity.jpg' },
+    // { name: 'Air Conditioner', image: 'static/images/slideshow/air-conditioner.jpg' },
+    { name: 'Carpentry', image: 'static/images/slideshow/carpentry.jpg' },
+    { name: 'Gardening', image: 'static/images/slideshow/gardening.jpg' },
+    { name: 'Interior Design', image: 'static/images/slideshow/interior-design.jpg' }
   ];
 
   const container = document.getElementById('slideshow-container');
@@ -60,6 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
     goToSlide(nextIndex);
   }
 
-  // Auto-advance every 4 seconds
-  setInterval(nextSlide, 4000);
+  // Auto-advance every 5 seconds
+  setInterval(nextSlide, 5000);
 });
