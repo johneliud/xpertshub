@@ -1,0 +1,14 @@
+{% if rating_count > 0 %}
+<div class="flex items-center space-x-2">
+  <div class="flex text-yellow-400">
+    {% for i in "12345" %}
+      {% if average_rating >= i|add:0 %}
+        <i class='bx bxs-star {{ star_size|default:"text-sm" }}'></i>
+      {% else %}
+        <i class='bx bx-star {{ star_size|default:"text-sm" }}'></i>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <span class="text-gray-600 {{ text_size|default:"text-sm" }}">({{ rating_count }}{{ rating_text|default:" review" }}{{ rating_count|pluralize }})</span>
+</div>
+{% endif %}
