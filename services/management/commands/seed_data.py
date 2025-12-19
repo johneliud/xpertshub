@@ -1,9 +1,12 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from django.core.files.base import ContentFile
 from users.models import User
 from services.models import Service, ServiceRequest, Rating
 import random
 from datetime import datetime, timedelta
+import requests
+from io import BytesIO
 
 class Command(BaseCommand):
     help = 'Seed database with sample users and services'
@@ -11,13 +14,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write('Seeding database...')
 
-        # Create 20 customers
+        # Create 15 customers
         customers = []
         customer_names = [
             'john_doe', 'jane_smith', 'mike_johnson', 'sarah_wilson', 'david_brown',
             'lisa_davis', 'chris_miller', 'amanda_garcia', 'kevin_martinez', 'nicole_anderson',
-            'ryan_taylor', 'jessica_thomas', 'brandon_jackson', 'ashley_white', 'justin_harris',
-            'stephanie_martin', 'tyler_thompson', 'rachel_clark', 'jordan_lewis', 'michelle_walker'
+            'ryan_taylor', 'jessica_thomas', 'brandon_jackson', 'ashley_white', 'justin_harris'
         ]
 
         for i, name in enumerate(customer_names):
@@ -30,16 +32,14 @@ class Command(BaseCommand):
             )
             customers.append(customer)
 
-        # Create 20 companies
+        # Create 15 companies
         companies = []
         company_data = [
             ('elite_plumbers', 'Plumbing'), ('ace_electricians', 'Electricity'), ('pro_painters', 'Painting'),
             ('clean_masters', 'Housekeeping'), ('garden_experts', 'Gardening'), ('wood_crafters', 'Carpentry'),
             ('cool_air_tech', 'Air Conditioner'), ('lock_specialists', 'Locks'), ('design_pros', 'Interior Design'),
             ('home_fixers', 'Home Machines'), ('water_heater_pros', 'Water Heaters'), ('total_solutions', 'All in One'),
-            ('quick_plumbers', 'Plumbing'), ('spark_electric', 'Electricity'), ('color_masters', 'Painting'),
-            ('tidy_homes', 'Housekeeping'), ('green_thumbs', 'Gardening'), ('custom_wood', 'Carpentry'),
-            ('arctic_cooling', 'Air Conditioner'), ('secure_locks', 'Locks')
+            ('quick_plumbers', 'Plumbing'), ('spark_electric', 'Electricity'), ('color_masters', 'Painting')
         ]
 
         for i, (name, field) in enumerate(company_data):
@@ -51,6 +51,30 @@ class Command(BaseCommand):
                 field_of_work=field
             )
             companies.append(company)
+
+        # Service images mapping
+        service_images = {
+            'Plumbing': 'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400',
+            'Electricity': 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=400',
+            'Painting': 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400',
+            'Housekeeping': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
+            'Gardening': 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400',
+            'Carpentry': 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400',
+            'Air Conditioner': 'https://images.unsplash.com/photo-1631545806609-c2b999c8f4c6?w=400',
+            'Locks': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
+            'Interior Design': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400',
+            'Home Machines': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
+            'Water Heaters': 'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400',
+        }
+
+        def download_image(url, filename):
+            try:
+                response = requests.get(url, timeout=10)
+                if response.status_code == 200:
+                    return ContentFile(response.content, name=filename)
+            except:
+                pass
+            return None
 
         # Create services for each company
         service_templates = {
@@ -72,7 +96,6 @@ class Command(BaseCommand):
         for company in companies:
             field = company.field_of_work
             if field == 'All in One':
-                # All in One companies can offer services from any field
                 all_services = []
                 for field_services in service_templates.values():
                     all_services.extend(field_services)
@@ -82,7 +105,7 @@ class Command(BaseCommand):
                 available_services = service_templates.get(field, ['General Service'])
                 service_fields = [field]
 
-            for i, service_name in enumerate(available_services[:3]):  # Max 3 services per company
+            for i, service_name in enumerate(available_services[:3]):
                 service_field = random.choice(service_fields) if field == 'All in One' else field
                 service = Service.objects.create(
                     name=f'{service_name} by {company.username}',
@@ -91,12 +114,20 @@ class Command(BaseCommand):
                     price_per_hour=random.uniform(25.0, 100.0),
                     company=company,
                     status='approved',
-                    date_created=timezone.now() - timedelta(days=random.randint(1, 90))
+                    date_created=timezone.now() - timedelta(days=random.randint(1, 90)),
+                    date_approved=timezone.now() - timedelta(days=random.randint(1, 30))
                 )
+                
+                # Add image to service
+                image_url = service_images.get(service_field, service_images['Plumbing'])
+                image_file = download_image(image_url, f'{service.name.replace(" ", "_").lower()}.jpg')
+                if image_file:
+                    service.image.save(f'{service.name.replace(" ", "_").lower()}.jpg', image_file, save=True)
+                
                 services.append(service)
 
         # Create service requests
-        for _ in range(30):
+        for _ in range(25):
             customer = random.choice(customers)
             service = random.choice(services)
             ServiceRequest.objects.create(
@@ -108,23 +139,22 @@ class Command(BaseCommand):
             )
 
         # Create ratings
-        for _ in range(40):
+        for _ in range(30):
             customer = random.choice(customers)
             service = random.choice(services)
             
-            # Check if this customer has already rated this service
             if not Rating.objects.filter(service=service, customer=customer).exists():
                 Rating.objects.create(
                     service=service,
                     customer=customer,
-                    rating=random.randint(3, 5),  # Mostly positive ratings
+                    rating=random.randint(3, 5),
                     review=random.choice([
                         'Excellent service! Highly recommended.',
                         'Great work, very professional.',
                         'Good quality service, will use again.',
                         'Satisfied with the work done.',
                         'Professional and timely service.',
-                        '',  # Some ratings without reviews
+                        '',
                         'Outstanding work quality.',
                         'Very pleased with the results.'
                     ]),
@@ -137,7 +167,7 @@ class Command(BaseCommand):
                 f'- {len(customers)} customers\n'
                 f'- {len(companies)} companies\n'
                 f'- {len(services)} services\n'
-                f'- 30 service requests\n'
-                f'- 40 ratings'
+                f'- 25 service requests\n'
+                f'- 30 ratings'
             )
         )
