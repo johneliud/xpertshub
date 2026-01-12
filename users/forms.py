@@ -16,11 +16,15 @@ class CustomerRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'date_of_birth']
+        fields = ['first_name', 'last_name', 'email', 'date_of_birth']
         widgets = {
-            'username': forms.TextInput(attrs={
+            'first_name': forms.TextInput(attrs={
                 'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200',
-                'placeholder': 'Enter username',
+                'placeholder': 'Enter first name',
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200',
+                'placeholder': 'Enter last name',
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200',
@@ -37,12 +41,6 @@ class CustomerRegistrationForm(forms.ModelForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("A user with this email already exists.")
         return email
-
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("A user with this username already exists.")
-        return username
 
     def clean(self):
         cleaned_data = super().clean()
@@ -68,11 +66,15 @@ class CompanyRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'field_of_work']
+        fields = ['first_name', 'last_name', 'email', 'field_of_work']
         widgets = {
-            'username': forms.TextInput(attrs={
+            'first_name': forms.TextInput(attrs={
                 'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200',
-                'placeholder': 'Enter company username',
+                'placeholder': 'Enter first name',
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200',
+                'placeholder': 'Enter last name',
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200',
@@ -88,12 +90,6 @@ class CompanyRegistrationForm(forms.ModelForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("A user with this email already exists.")
         return email
-
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("A user with this username already exists.")
-        return username
 
     def clean(self):
         cleaned_data = super().clean()
