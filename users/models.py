@@ -21,6 +21,6 @@ class User(AbstractUser):
         ('Water Heaters', 'Water Heaters'),
     ]
 
-    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
+    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='customer')
     date_of_birth = models.DateField(null=True, blank=True)
     field_of_work = models.CharField(max_length=50, choices=FIELD_OF_WORK_CHOICES, null=True, blank=True)
