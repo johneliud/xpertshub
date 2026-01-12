@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (CustomerRegisterView, CompanyRegisterView, UserLoginView, ProfileView,
-                   set_user_type, complete_customer_profile, complete_company_profile)
+                   set_user_type)
 from xpertshub_app.views import UserLogoutView
 
 urlpatterns = [
@@ -10,6 +10,4 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(), name='logout'),
     path('profile/<str:username>/', ProfileView.as_view(), name='profile'),
     path('set-user-type/', set_user_type, name='set_user_type'),
-    path('complete-customer-profile/', complete_customer_profile, name='complete_customer_profile'),
-    path('complete-company-profile/', complete_company_profile, name='complete_company_profile'),
 ]
