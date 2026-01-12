@@ -18,6 +18,20 @@ class CustomerRegisterView(CreateView):
     def form_valid(self, form):
         form.instance.user_type = 'customer'
         user = form.save(commit=False)
+        
+        # Generate username from first and last name
+        first_name = form.cleaned_data['first_name']
+        last_name = form.cleaned_data['last_name']
+        base_username = f"{first_name.lower()}.{last_name.lower()}"
+        
+        # Ensure unique username
+        username = base_username
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+        
+        user.username = username
         user.set_password(form.cleaned_data['password'])
         user.save()
         return redirect(self.success_url)
@@ -31,6 +45,20 @@ class CompanyRegisterView(CreateView):
     def form_valid(self, form):
         form.instance.user_type = 'company'
         user = form.save(commit=False)
+        
+        # Generate username from first and last name
+        first_name = form.cleaned_data['first_name']
+        last_name = form.cleaned_data['last_name']
+        base_username = f"{first_name.lower()}.{last_name.lower()}"
+        
+        # Ensure unique username
+        username = base_username
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+        
+        user.username = username
         user.set_password(form.cleaned_data['password'])
         user.save()
         return redirect(self.success_url)
@@ -51,43 +79,10 @@ class ProfileView(DetailView):
         else:
             return ['users/company_profile.html']
 
-def select_user_type(request):
-    return render(request, 'users/select_user_type.html')
-
 @require_http_methods(["POST"])
 def set_user_type(request):
     user_type = request.POST.get('user_type')
     if user_type in ['customer', 'company']:
         request.session['user_type'] = user_type
         return redirect(f'/accounts/google/login/?user_type={user_type}')
-    return redirect('select_user_type')
-
-@login_required
-def complete_customer_profile(request):
-    if request.user.user_type != 'customer':
-        return redirect('home')
-    
-    if request.method == 'POST':
-        form = CustomerProfileCompletionForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    else:
-        form = CustomerProfileCompletionForm(instance=request.user)
-    
-    return render(request, 'users/complete_customer_profile.html', {'form': form})
-
-@login_required
-def complete_company_profile(request):
-    if request.user.user_type != 'company':
-        return redirect('home')
-    
-    if request.method == 'POST':
-        form = CompanyProfileCompletionForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    else:
-        form = CompanyProfileCompletionForm(instance=request.user)
-    
-    return render(request, 'users/complete_company_profile.html', {'form': form})
+    return redirect('login')
