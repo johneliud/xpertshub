@@ -116,3 +116,24 @@ class LoginForm(AuthenticationForm):
         'placeholder': 'Enter password',
         'id': 'id_password',
     }))
+
+class CustomerProfileCompletionForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['date_of_birth']
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={
+                'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200',
+                'type': 'date',
+            }),
+        }
+
+class CompanyProfileCompletionForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['field_of_work']
+        widgets = {
+            'field_of_work': forms.Select(attrs={
+                'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200',
+            }),
+        }
