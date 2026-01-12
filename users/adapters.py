@@ -1,6 +1,4 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-from django.shortcuts import redirect
-from django.urls import reverse
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def save_user(self, request, sociallogin, form=None):
@@ -10,33 +8,34 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         # Set user type
         user.user_type = user_type
         
-        # Set email and username from Google
+        # Set email and names from Google
         if sociallogin.account.extra_data:
             email = sociallogin.account.extra_data.get('email')
             name = sociallogin.account.extra_data.get('name', '')
             
             if email:
                 user.email = email
-                user.username = email  # Use email as username
             
             if name:
-                # Split name into first and last name
                 name_parts = name.split(' ', 1)
                 user.first_name = name_parts[0]
                 if len(name_parts) > 1:
                     user.last_name = name_parts[1]
+                else:
+                    user.last_name = ''
+                
+                # Generate username from first and last name
+                base_username = f"{user.first_name.lower()}.{user.last_name.lower()}" if user.last_name else user.first_name.lower()
+                
+                # Ensure unique username
+                from .models import User
+                username = base_username
+                counter = 1
+                while User.objects.filter(username=username).exists():
+                    username = f"{base_username}{counter}"
+                    counter += 1
+                
+                user.username = username
         
         user.save()
         return user
-    
-    def get_login_redirect_url(self, request):
-        user = request.user
-        
-        # Check if user needs to complete profile
-        if hasattr(user, 'user_type'):
-            if user.user_type == 'customer' and not user.date_of_birth:
-                return reverse('complete_customer_profile')
-            elif user.user_type == 'company' and not user.field_of_work:
-                return reverse('complete_company_profile')
-        
-        return '/'
